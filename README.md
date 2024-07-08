@@ -1,10 +1,10 @@
 # csc413-tankgame
 
 
-| Student Information |                |
-|:-------------------:|----------------|
-|  Student Name       |   Name Here    |
-|  Student Email      |   Email Here   |
+| Student Information |                  |
+|:-------------------:|------------------|
+|  Student Name       | Ethan Zheng      |
+|  Student Email      | ezheng2@sfsu.edu |
 
 
 ## Purpose of jar Folder 
