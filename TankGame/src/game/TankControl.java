@@ -24,6 +24,15 @@ public class TankControl implements KeyListener {
         this.shoot = shoot;
     }
 
+//    public TankControl2(Tank t2, int up, int down, int left, int right, int shoot) {
+//        this.t2 = t2;
+//        this.up = up;
+//        this.down = down;
+//        this.right = right;
+//        this.left = left;
+//        this.shoot = shoot;
+//    }
+
     @Override
     public void keyTyped(KeyEvent ke) {
 
