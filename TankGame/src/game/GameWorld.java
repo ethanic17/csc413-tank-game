@@ -21,6 +21,7 @@ public class GameWorld extends JPanel implements Runnable {
     private Tank t1, t2;
     private final Launcher lf;
     private long tick = 0;
+    private BufferedImage background;
 
     /**
      *
@@ -71,8 +72,8 @@ public class GameWorld extends JPanel implements Runnable {
 
         BufferedImage t1img = null;
 
-        BufferedImage background = null;
-
+//        BufferedImage background = null;
+    // local declare of background no work
 
 
         try {
@@ -87,7 +88,8 @@ public class GameWorld extends JPanel implements Runnable {
 
             background = ImageIO.read(
                     Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("Background.bmp"),
-                            "Could not find Background.bmp"));
+                            "Could not find Background.bmp")
+            );
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
@@ -101,17 +103,22 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
-        background = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+//        floor = background;
+
+//        background = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
     }
 
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g); // for bg image, load badkground before tanks
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
+
+        buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
+
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
-        this.background.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);
     }
 }
