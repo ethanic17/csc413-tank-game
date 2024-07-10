@@ -22,6 +22,7 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
     private BufferedImage background;
+    private BufferedImage wall;
 
     /**
      *
@@ -35,6 +36,7 @@ public class GameWorld extends JPanel implements Runnable {
         try {
             while (true) {
                 this.tick++;
+//                this.background.update();
                 this.t1.update(); // update tank 1
                 this.t2.update(); //updates tank 2
                 this.repaint();   // redraw game
@@ -90,6 +92,11 @@ public class GameWorld extends JPanel implements Runnable {
                     Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("Background.bmp"),
                             "Could not find Background.bmp")
             );
+
+            wall = ImageIO.read(
+                    Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("wall1.png"),
+                            "Could not find wall1.png")
+            );
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
@@ -117,6 +124,7 @@ public class GameWorld extends JPanel implements Runnable {
 
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
+        buffer.drawImage(wall, 100, 100, this); // walls test image
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);

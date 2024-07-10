@@ -105,6 +105,7 @@ public class Tank{
         x -= vx;
         y -= vy;
        checkBorder();
+       checkWall();
     }
 
     private void moveForwards() {
@@ -113,6 +114,7 @@ public class Tank{
         x += vx;
         y += vy;
         checkBorder();
+        checkWall();
     }
 
 
@@ -128,6 +130,13 @@ public class Tank{
         }
         if (y >= GameConstants.GAME_SCREEN_HEIGHT - 80) {
             y = GameConstants.GAME_SCREEN_HEIGHT - 80;
+        }
+    }
+
+    // checks if wall is in direction
+    private void checkWall() {
+        if (x < Wall) {
+
         }
     }
 
