@@ -2,6 +2,7 @@ package TankGame.src.menus;
 
 
 import TankGame.src.Launcher;
+import TankGame.src.game.ResourceManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,19 +12,12 @@ import java.io.IOException;
 
 public class StartMenuPanel extends JPanel {
 
-    private BufferedImage menuBackground;
+    private final BufferedImage menuBackground;
     private final Launcher lf;
 
     public StartMenuPanel(Launcher lf) {
         this.lf = lf;
-        try {
-
-            menuBackground = ImageIO.read(this.getClass().getClassLoader().getResource("title.png"));
-        } catch (IOException e) {
-            System.out.println("Error cant read menu background");
-            e.printStackTrace();
-            System.exit(-3);
-        }
+        this.menuBackground = ResourceManager.getSprite("menu");
         this.setBackground(Color.BLACK);
         this.setLayout(null);
 

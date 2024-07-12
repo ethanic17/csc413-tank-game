@@ -1,6 +1,7 @@
 package TankGame.src;
 
 import TankGame.src.game.GameWorld;
+import TankGame.src.game.ResourceManager;
 import TankGame.src.menus.EndGamePanel;
 import TankGame.src.menus.StartMenuPanel;
 
@@ -44,6 +45,7 @@ public class Launcher {
     }
 
     private void initUIComponents(){
+//        ResourceManager.loadAssets();
         this.mainPanel = new JPanel(); // create a new main panel
         /*
          * start panel will be used to view the start menu. It will contain
@@ -97,6 +99,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) {
+        ResourceManager.loadAssets();
         (new Launcher()).initUIComponents();
     }
 }

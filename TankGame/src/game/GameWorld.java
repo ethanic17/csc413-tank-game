@@ -54,7 +54,7 @@ public class GameWorld extends JPanel implements Runnable {
     /**
      * Reset game to its initial state.
      */
-    public void resetGame() {
+    public void resetGame() { //TODO fix rest game method
         this.tick = 0;
         this.t1.setX(300);
         this.t1.setY(300);
@@ -72,45 +72,17 @@ public class GameWorld extends JPanel implements Runnable {
                 GameConstants.GAME_SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
 
-        BufferedImage t1img = null;
-
-//        BufferedImage background = null;
-    // local declare of background no work
-
-
-        try {
-            /*
-             * note class loaders read files from the out folder (build folder in Netbeans) and not the
-             * current working directory. When running a jar, class loaders will read from within the jar.
-             */
-            t1img = ImageIO.read(
-                    Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("tank1.png"),
-                    "Could not find tank1.png")
-            );
-
-            background = ImageIO.read(
-                    Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("Background.bmp"),
-                            "Could not find Background.bmp")
-            );
-
-            wall = ImageIO.read(
-                    Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("wall1.png"),
-                            "Could not find wall1.png")
-            );
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-        }
-
-        t1 = new Tank(300, 300, 0, 0, (short) 0, t1img);
+        t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("t1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         this.lf.getJf().addKeyListener(tc1);
 
-        t2 = new Tank(400, 400, 0, 0,  (short) 0, t1img);
+        t2 = new Tank(400, 400, 0, 0,  (short) 0, ResourceManager.getSprite("t2"));
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
 //        floor = background;
+
+        background = ResourceManager.getSprite("background");
 
 //        background = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 

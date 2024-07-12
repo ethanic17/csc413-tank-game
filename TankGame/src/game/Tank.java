@@ -135,9 +135,9 @@ public class Tank{
 
     // checks if wall is in direction
     private void checkWall() {
-        if (x < Wall) {
-
-        }
+//        if (x < Wall) {
+//
+//        }
     }
 
     @Override
