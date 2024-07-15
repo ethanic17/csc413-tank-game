@@ -1,15 +1,18 @@
 package TankGame.src.game;
 
-import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
 
 public class Wall {
+    int x, y;
     BufferedImage img;
     public Wall(String imgpath){
-        img = ResourceManager.getSprite("bwall"); //TODO bwall in resource manager
+        img = ResourceManager.getSprite("wall");
 
     }
+
+//    public Rectangle getBounds(){
+//        return new Rectangle(x, y, img.getWidth(), img.getHeight());
+//    }
 }

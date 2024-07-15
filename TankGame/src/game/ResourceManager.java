@@ -26,10 +26,12 @@ public class ResourceManager {
         ResourceManager.sprites.put("t2", loadSprite("tank2.png"));
         ResourceManager.sprites.put("menu", loadSprite("title.png"));
         ResourceManager.sprites.put("wall", loadSprite("wall1.png"));
+        ResourceManager.sprites.put("bwall", loadSprite("wall2.png"));
         ResourceManager.sprites.put("background", loadSprite("background.bmp"));
-//        ResourceManager.sprites.put("speed", loadSprite("speed.png"));
-//        ResourceManager.sprites.put("health", loadSprite("health.png"));
-//        ResourceManager.sprites.put("shield", loadSprite("shield.png"));
+        ResourceManager.sprites.put("speed", loadSprite("speed.png"));
+        ResourceManager.sprites.put("health", loadSprite("health.png"));
+        ResourceManager.sprites.put("shield", loadSprite("shield.png"));
+        ResourceManager.sprites.put("bullet", loadSprite("bullet.png"));
     }
 
     private static void initSounds(){

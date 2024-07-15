@@ -22,7 +22,7 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
     private BufferedImage background;
-    private BufferedImage wall;
+    private BufferedImage wall, bwall, health, shield, speed, bullet;
 
     /**
      *
@@ -39,6 +39,7 @@ public class GameWorld extends JPanel implements Runnable {
 //                this.background.update();
                 this.t1.update(); // update tank 1
                 this.t2.update(); //updates tank 2
+//                this.bwall.update(); // updates breakwable wall TODO
                 this.repaint();   // redraw game
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
@@ -80,11 +81,13 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
-//        floor = background;
-
         background = ResourceManager.getSprite("background");
-
-//        background = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        wall = ResourceManager.getSprite("wall");
+        bwall = ResourceManager.getSprite("bwall");
+        health = ResourceManager.getSprite("health");
+        shield = ResourceManager.getSprite("shield");
+        speed = ResourceManager.getSprite("speed");
+        bullet = ResourceManager.getSprite("bullet");
 
     }
 
@@ -96,7 +99,19 @@ public class GameWorld extends JPanel implements Runnable {
 
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
+
         buffer.drawImage(wall, 100, 100, this); // walls test image
+        buffer.drawImage(bwall, 200, 200, this); // breakable walls test image
+        //TODO close breakable wall buffer when shot at by tank
+
+        //TODO resize images to fit
+        //TODO better way to manage sprite buffer images? 3D array?
+        buffer.drawImage(health, 150, 150, this); // health bar test image
+        buffer.drawImage(shield, 250, 250, this); // shield test image
+        buffer.drawImage(speed, 350, 350, this); // speed test image
+        buffer.drawImage(bullet, 450, 450, this); // bullet test image
+
+
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);
