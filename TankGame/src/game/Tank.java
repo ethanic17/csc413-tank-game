@@ -156,4 +156,18 @@ public class Tank{
         g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
 
     }
+
+    public void handleCollision(Object with) {
+        if (with instanceof Bullet) {
+            // lose health
+        } else if (with instanceof HealthPowerup) {
+            // gain health
+        } else if (with instanceof ShieldPowerup) {
+            // gain shield
+        } else if (with instanceof SpeedPowerup) {
+            // gain speed
+        } else if (with instanceof Wall) {
+            // stop or undo move
+        }
+    }
 }

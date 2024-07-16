@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 
 public class Bullet {
     BufferedImage img;
-    public Bullet(String imgpath){
-        img = ResourceManager.getSprite("bullet");
-    }
+//    public Bullet(String imgpath){
+//        img = ResourceManager.getSprite("bullet");
+//    }
 
 
 }

@@ -9,7 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -23,6 +27,9 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
     private BufferedImage background;
     private BufferedImage wall, bwall, health, shield, speed, bullet;
+
+//    ArrayList gObjs = new ArrayList();
+    ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
 
     /**
      *
@@ -73,6 +80,30 @@ public class GameWorld extends JPanel implements Runnable {
                 GameConstants.GAME_SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
 
+        int row = 0;
+        InputStreamReader isr = new InputStreamReader(
+                Objects.requireNonNull(
+                    ResourceManager.class.getClassLoader().getResourceAsStream("world.csv")
+                )
+        );
+
+        try (BufferedReader mapReader = new BufferedReader(isr)) { // reads csv file and creates game objects based on integer values in csv
+            while(mapReader.ready()) {
+                String line = mapReader.readLine();
+                String[] objs = line.split(",");
+                System.out.println(Arrays.toString(objs));
+                for (int col = 0; col < objs.length; col++) {
+                    String gameItem = objs[col];
+                    if("0".equals(gameItem)) continue; // 0 means nothing in csv, skips over
+                    this.gObjs.add(GameObject.newInstance(gameItem, col*32, row*32)); // implementation inside GameObject class
+//                    System.out.println(gameItem);
+                }
+                row++;
+            }
+        } catch  (IOException e){
+            throw new RuntimeException(e);
+        }
+
         t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("t1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         this.lf.getJf().addKeyListener(tc1);
@@ -82,12 +113,12 @@ public class GameWorld extends JPanel implements Runnable {
         this.lf.getJf().addKeyListener(tc2);
 
         background = ResourceManager.getSprite("background");
-        wall = ResourceManager.getSprite("wall");
-        bwall = ResourceManager.getSprite("bwall");
-        health = ResourceManager.getSprite("health");
-        shield = ResourceManager.getSprite("shield");
-        speed = ResourceManager.getSprite("speed");
-        bullet = ResourceManager.getSprite("bullet");
+//        wall = ResourceManager.getSprite("wall");
+//        bwall = ResourceManager.getSprite("bwall");
+//        health = ResourceManager.getSprite("health");
+//        shield = ResourceManager.getSprite("shield");
+//        speed = ResourceManager.getSprite("speed");
+//        bullet = ResourceManager.getSprite("bullet");
 
     }
 
@@ -97,23 +128,28 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
 
-        buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
+//        buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
+//        this.setBackground(Color.BLACK);
 
 
-        buffer.drawImage(wall, 100, 100, this); // walls test image
-        buffer.drawImage(bwall, 200, 200, this); // breakable walls test image
+        // renders game objects from csv
+        this.gObjs.forEach(go -> go.drawImage(buffer));
+
+//        buffer.drawImage(wall, 100, 100, this); // walls test image
+//        buffer.drawImage(bwall, 200, 200, this); // breakable walls test image
         //TODO close breakable wall buffer when shot at by tank
 
         //TODO resize images to fit
         //TODO better way to manage sprite buffer images? 3D array?
-        buffer.drawImage(health, 150, 150, this); // health bar test image
-        buffer.drawImage(shield, 250, 250, this); // shield test image
-        buffer.drawImage(speed, 350, 350, this); // speed test image
-        buffer.drawImage(bullet, 450, 450, this); // bullet test image
+//        buffer.drawImage(health, 150, 150, this); // health bar test image
+//        buffer.drawImage(shield, 250, 250, this); // shield test image
+//        buffer.drawImage(speed, 350, 350, this); // speed test image
+//        buffer.drawImage(bullet, 450, 450, this); // bullet test image
 
 
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);
+
     }
 }
