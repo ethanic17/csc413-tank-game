@@ -1,8 +1,11 @@
 package TankGame.src.game;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
+    protected float x, y; // because its protected, u dont have to declare this in all subclasses of GameObject or use setters and getters
+    protected BufferedImage img;
     /**
      * * creates new game object based on type
      * @param type the type of the object to create
@@ -21,5 +24,9 @@ public abstract class GameObject {
         };
     }
 
-    public abstract void drawImage(Graphics g); // dont reduce visibility on abstract methods in subclasses
+    // setters and getters?
+    // dont reduce visibility on abstract methods in subclasses
+    public void drawImage(Graphics g) {
+        g.drawImage(this.img, (int)x,(int)y, null); // Uses GameObject variables ONLY if there arent any in the subclass
+    }
 }
