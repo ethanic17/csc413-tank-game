@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ResourceManager {
+public class ResourceManager { // loads all resources in one class and can refer to them in other classes
     private final static Map<String, BufferedImage> sprites = new HashMap<>();
     private final static Map<String, Clip> sounds = new HashMap<>();
     private final static Map<String, List<BufferedImage>> animations = new HashMap<>();
@@ -25,9 +25,10 @@ public class ResourceManager {
         ResourceManager.sprites.put("t1", loadSprite("tank1.png"));
         ResourceManager.sprites.put("t2", loadSprite("tank2.png"));
         ResourceManager.sprites.put("menu", loadSprite("title.png"));
-        ResourceManager.sprites.put("wall", loadSprite("wall1.png"));
+        ResourceManager.sprites.put("wall", loadSprite("wall.png"));
         ResourceManager.sprites.put("bwall", loadSprite("wall2.png"));
-        ResourceManager.sprites.put("background", loadSprite("background.bmp"));
+        ResourceManager.sprites.put("background", loadSprite("backgroundsculk.png"));
+        ResourceManager.sprites.put("floor", loadSprite("backgroundsculk.png")); // duplicate/same background/floor ?
         ResourceManager.sprites.put("speed", loadSprite("speed.png"));
         ResourceManager.sprites.put("health", loadSprite("health.png"));
         ResourceManager.sprites.put("shield", loadSprite("shield.png"));
@@ -43,6 +44,7 @@ public class ResourceManager {
     }
 
 
+    // error handling
     public static void loadAssets() {
         try {
             initSprites();

@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
  */
 public class Tank{
 
+    private float screen_x; // cannot be final
+    private float screen_y;
+
     private float x;
     private float y;
     private float vx;
@@ -27,6 +30,9 @@ public class Tank{
     private boolean LeftPressed;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
+//        super(x, y, img);
+        this.screen_x = x;
+        this.screen_y = y;
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -71,6 +77,14 @@ public class Tank{
         this.LeftPressed = false;
     }
 
+    public float getScreen_x() {
+        return screen_x;
+    }
+
+    public float getScreen_y() {
+        return screen_y;
+    }
+
     void update() {
         if (this.UpPressed) {
             this.moveForwards();
@@ -87,7 +101,7 @@ public class Tank{
         if (this.RightPressed) {
             this.rotateRight();
         }
-
+        centerScreen();
 
     }
 
@@ -117,16 +131,29 @@ public class Tank{
         checkWall();
     }
 
+    private void centerScreen(){ // preventing rasteriazation error/tank going off to nowhere
+        this.screen_x = this.x - GameConstants.GAME_SCREEN_WIDTH/4f;
+        this.screen_y = this.y - GameConstants.GAME_SCREEN_HEIGHT/2f;
+
+        // lower bound check
+        if (this.screen_x < 0) screen_x = 0;
+        if (this.screen_y < 0) screen_y = 0;
+
+        // TODO check nvidia panel disable battery boost, remove fps cap so doesnt run at 5fps on battery
+        //upper bound check
+        if (this.screen_x > GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_HEIGHT/2f) { // going abobe max, set back to max
+            this.screen_x = GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_HEIGHT/2f;
+        }
+        if (this.screen_y > GameConstants.GAME_SCREEN_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT) {
+            this.screen_y = GameConstants.GAME_SCREEN_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
+        }
+    }
 
     private void checkBorder() {
-        if (x < 30) {
-            x = 30;
-        }
+        if (x < 30) x = 30;
+        if (y < 40) y = 40;
         if (x >= GameConstants.GAME_SCREEN_WIDTH - 88) {
             x = GameConstants.GAME_SCREEN_WIDTH - 88;
-        }
-        if (y < 40) {
-            y = 40;
         }
         if (y >= GameConstants.GAME_SCREEN_HEIGHT - 80) {
             y = GameConstants.GAME_SCREEN_HEIGHT - 80;

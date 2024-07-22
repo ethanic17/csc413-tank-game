@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class GameWorld extends JPanel implements Runnable {
 //                this.background.update();
                 this.t1.update(); // update tank 1
                 this.t2.update(); //updates tank 2
+                this.renderFrame();
 //                this.bwall.update(); // updates breakwable wall TODO
                 this.repaint();   // redraw game
                 /*
@@ -122,34 +124,67 @@ public class GameWorld extends JPanel implements Runnable {
 
     }
 
+    private void renderFloor(Graphics buffer){
+        BufferedImage floor = ResourceManager.getSprite("floor");
+        for (int i = 0; i < GameConstants.GAME_SCREEN_WIDTH; i += floor.getWidth()) {
+            for (int j = 0; j < GameConstants.GAME_SCREEN_HEIGHT; j += floor.getHeight()) {
+                buffer.drawImage(floor, i, j, null);
+            }
+        }
+    }
+
+    static double scaleFactor = .25; // for minimap to be bigger or smaller (scaling on diff resolutions)
+
+    private void displayMiniMap(Graphics2D onScreenPanel) { // creating minimap from BufferedImage floor/world
+        BufferedImage mm = this.world.getSubimage(0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT);
+        double mmx = GameConstants.GAME_SCREEN_WIDTH/2. - (GameConstants.GAME_SCREEN_WIDTH*scaleFactor)/2; // top left corner onf minimap
+        double mmy = GameConstants.GAME_SCREEN_HEIGHT - (GameConstants.GAME_SCREEN_HEIGHT*scaleFactor);
+
+        AffineTransform scaler = AffineTransform.getTranslateInstance(mmx, mmy); // moves Minimap to a certain portion of map
+        scaler.scale(scaleFactor, scaleFactor); // scales minimap
+        onScreenPanel.drawImage(mm,scaler,null);
+    }
+
+    private void displaySplitScreen(Graphics2D onScreenPanel) {
+        BufferedImage lh = this.world.getSubimage((int)this.t1.getScreen_x(), (int)this.t1.getScreen_y(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+        onScreenPanel.drawImage(lh, 0, 0, null);
+
+        BufferedImage rh = this.world.getSubimage((int)this.t2.getScreen_x(), (int)this.t2.getScreen_y(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+        onScreenPanel.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
+    }
+
+    private void renderFrame() {
+        // 1:05:46 in CSC 413 MM & Split Screen Lexture
+        // ?? doesnt work bc of buffer
+        // dispatch thread ang game thread
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // for bg image, load badkground before tanks
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
+        //        this.setBackground(Color.BLACK);
 
-//        buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
-//        this.setBackground(Color.BLACK);
-
+        // TODO why dpes this shit drop my fps to like 3
+        buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer));
 
-//        buffer.drawImage(wall, 100, 100, this); // walls test image
-//        buffer.drawImage(bwall, 200, 200, this); // breakable walls test image
         //TODO close breakable wall buffer when shot at by tank
-
-        //TODO resize images to fit
-        //TODO better way to manage sprite buffer images? 3D array?
-//        buffer.drawImage(health, 150, 150, this); // health bar test image
-//        buffer.drawImage(shield, 250, 250, this); // shield test image
-//        buffer.drawImage(speed, 350, 350, this); // speed test image
-//        buffer.drawImage(bullet, 450, 450, this); // bullet test image
-
 
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
-        g2.drawImage(world, 0, 0, null);
+//        g2.drawImage(world, 0, 0, null);
+
+        // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
+        this.displaySplitScreen(g2);
+        this.displayMiniMap(g2);
 
     }
+
+
+
+
 }
