@@ -24,15 +24,6 @@ public class TankControl implements KeyListener {
         this.shoot = shoot;
     }
 
-//    public TankControl2(Tank t2, int up, int down, int left, int right, int shoot) {
-//        this.t2 = t2;
-//        this.up = up;
-//        this.down = down;
-//        this.right = right;
-//        this.left = left;
-//        this.shoot = shoot;
-//    }
-
     @Override
     public void keyTyped(KeyEvent ke) {
 
@@ -53,6 +44,9 @@ public class TankControl implements KeyListener {
         if (keyPressed == right) {
             this.t1.toggleRightPressed();
         }
+        if(keyPressed == shoot) {
+            this.t1.toggleShoot();
+        }
     }
 
     @Override
@@ -69,6 +63,9 @@ public class TankControl implements KeyListener {
         }
         if (keyReleased  == right) {
             this.t1.unToggleRightPressed();
+        }
+        if(keyReleased == shoot) {
+            this.t1.unToggleShoot();
         }
     }
 }

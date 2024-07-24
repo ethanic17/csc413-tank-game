@@ -114,6 +114,9 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
+//        this.gameObjects.add(t1);
+        //TODO add tank1 and  2 to game objects
+
         background = ResourceManager.getSprite("background");
 //        wall = ResourceManager.getSprite("wall");
 //        bwall = ResourceManager.getSprite("bwall");
@@ -153,11 +156,13 @@ public class GameWorld extends JPanel implements Runnable {
         onScreenPanel.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
     }
 
-    private void renderFrame() {
+    private void renderFrame() { // offloading onto anthoer thread
         // 1:05:46 in CSC 413 MM & Split Screen Lexture
         // ?? doesnt work bc of buffer
         // dispatch thread ang game thread
     }
+
+
 
     @Override
     public void paintComponent(Graphics g) {

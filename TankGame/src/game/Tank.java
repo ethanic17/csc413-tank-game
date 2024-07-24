@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  *
  * @author anthony-pc
  */
-public class Tank{
+public class Tank extends GameObject {
 
     private float screen_x; // cannot be final
     private float screen_y;
@@ -28,6 +28,9 @@ public class Tank{
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
+    private boolean ShootPressed;
+
+    Bullet b;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
 //        super(x, y, img);
@@ -61,6 +64,8 @@ public class Tank{
         this.LeftPressed = true;
     }
 
+    void toggleShoot() {this.ShootPressed = true; }
+
     void unToggleUpPressed() {
         this.UpPressed = false;
     }
@@ -76,6 +81,8 @@ public class Tank{
     void unToggleLeftPressed() {
         this.LeftPressed = false;
     }
+
+    void unToggleShoot() {this.ShootPressed = false; }
 
     public float getScreen_x() {
         return screen_x;
@@ -100,6 +107,14 @@ public class Tank{
 
         if (this.RightPressed) {
             this.rotateRight();
+        }
+        if (this.ShootPressed) {
+            b = new Bullet(x, y, angle, ResourceManager.getSprite("bullet"));
+
+        }
+
+        if (b != null) { // only allows user to have 1 bullet at a time
+            b.update();
         }
         centerScreen();
 
@@ -173,14 +188,13 @@ public class Tank{
     }
 
 
-    void drawImage(Graphics g) {
+    public void drawImage(Graphics2D g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(this.img, rotation, null);
-        g2d.setColor(Color.RED);
-        //g2d.rotate(Math.toRadians(angle), bounds.x + bounds.width/2, bounds.y + bounds.height/2);
-        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
+        g.drawImage(this.img, rotation, null);
+        if( b != null) {
+            b.drawImage(g);
+        }
 
     }
 
