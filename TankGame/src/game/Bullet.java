@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class Bullet extends GameObject {
+public class Bullet extends GameObject implements Poolable {
     private float x;
     private float y;
     private float vx;
@@ -17,9 +17,18 @@ public class Bullet extends GameObject {
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
 
+//    private final int tankId;
+
     private BufferedImage img;
 
-    Bullet(float x, float y, float angle, BufferedImage img) {
+    public Bullet(BufferedImage img) {
+//        super( 0, 0, img);
+        this.vx = 0;
+        this.vy = 0;
+        this.angle = 0;
+    }
+
+    public Bullet(float x, float y, float angle, BufferedImage img) {
         this.x = x;
         this.y = y;
         this.vx = 0;
@@ -75,18 +84,37 @@ public class Bullet extends GameObject {
 
     }
 
-    public void handleCollision(Object with) {
-        if (with instanceof Bullet) {
-            // lose health
-        } else if (with instanceof HealthPowerup) {
-            // gain health
-        } else if (with instanceof ShieldPowerup) {
-            // gain shield
-        } else if (with instanceof SpeedPowerup) {
-            // gain speed
-        } else if (with instanceof Wall) {
-            // stop or undo move
-        }
+    @Override
+    public void initObject(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
+
+    @Override
+    public void initObject(float x, float y, float angle) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+    }
+
+    @Override
+    public void resetObject() {
+        this.x = -5;
+        this.y = -5;
+    }
+
+//    public void handleCollision(Object with) {
+//        if (with instanceof Bullet) {
+//            // lose health
+//        } else if (with instanceof HealthPowerup) {
+//            // gain health
+//        } else if (with instanceof ShieldPowerup) {
+//            // gain shield
+//        } else if (with instanceof SpeedPowerup) {
+//            // gain speed
+//        } else if (with instanceof Wall) {
+//            // stop or undo move
+//        }
+//    }
 
 }

@@ -4,16 +4,17 @@ import TankGame.src.GameConstants;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author anthony-pc
  */
 public class Tank extends GameObject {
-
+    private static ResourcePool<Bullet> bulletPool = new ResourcePool<>("bullet", Bullet.class, 500);
     private float screen_x; // cannot be final
     private float screen_y;
-
     private float x;
     private float y;
     private float vx;
@@ -31,6 +32,9 @@ public class Tank extends GameObject {
     private boolean ShootPressed;
 
     Bullet b;
+    List<Bullet> ammo = new ArrayList<Bullet>(); // store list here or in gameworld? Easier for collisions here, Tank owns the bullets
+    private long cooldown = 1500; // 1.5 seconds, how fast the user can shoot before cooldown/reload
+    private long LastFired = 0;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
 //        super(x, y, img);
@@ -92,7 +96,7 @@ public class Tank extends GameObject {
         return screen_y;
     }
 
-    void update() {
+    void update() { // pass GameWorld or GameState as a new object to get bullet access for tank?
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -108,9 +112,23 @@ public class Tank extends GameObject {
         if (this.RightPressed) {
             this.rotateRight();
         }
-        if (this.ShootPressed) {
-            b = new Bullet(x, y, angle, ResourceManager.getSprite("bullet"));
 
+        long currentTime = System.currentTimeMillis();
+        if (this.ShootPressed && currentTime > this.LastFired + this.cooldown) { // adds a cooldown for shooting bullets
+            this.LastFired = currentTime;
+            var p = ResourcePools.getPooledInstance("bullet");
+            p.initObject(x, y, angle);
+            this.ammo.add((Bullet)p);
+//            this.ammo.add( // creates new bullets inside arraylist ammo
+//                    new Bullet(x + this.img.getWidth()/2f,
+//                            y+ this.img.getHeight()/2f,
+//                            angle, // +15, -15, multi-shot powerup?
+//                            ResourceManager.getSprite("bullet")));
+
+        }
+
+        for (int i = 0; i< this.ammo.size(); i++){
+            this.ammo.get(i).update();
         }
 
         if (b != null) { // only allows user to have 1 bullet at a time
@@ -154,10 +172,9 @@ public class Tank extends GameObject {
         if (this.screen_x < 0) screen_x = 0;
         if (this.screen_y < 0) screen_y = 0;
 
-        // TODO check nvidia panel disable battery boost, remove fps cap so doesnt run at 5fps on battery
         //upper bound check
-        if (this.screen_x > GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_HEIGHT/2f) { // going abobe max, set back to max
-            this.screen_x = GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_HEIGHT/2f;
+        if (this.screen_x > GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_WIDTH/2f) { // going abobe max, set back to max
+            this.screen_x = GameConstants.GAME_SCREEN_WIDTH - GameConstants.GAME_SCREEN_WIDTH/2f;
         }
         if (this.screen_y > GameConstants.GAME_SCREEN_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT) {
             this.screen_y = GameConstants.GAME_SCREEN_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
@@ -192,23 +209,13 @@ public class Tank extends GameObject {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         g.drawImage(this.img, rotation, null);
-        if( b != null) {
-            b.drawImage(g);
-        }
 
-    }
-
-    public void handleCollision(Object with) {
-        if (with instanceof Bullet) {
-            // lose health
-        } else if (with instanceof HealthPowerup) {
-            // gain health
-        } else if (with instanceof ShieldPowerup) {
-            // gain shield
-        } else if (with instanceof SpeedPowerup) {
-            // gain speed
-        } else if (with instanceof Wall) {
-            // stop or undo move
+        for(int i = 0; i< this.ammo.size(); i++){
+            this.ammo.get(i).drawImage(g);
         }
+//        if( b != null) {
+//            b.drawImage(g);
+//        }
+
     }
 }

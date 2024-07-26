@@ -30,7 +30,7 @@ public class GameWorld extends JPanel implements Runnable {
     private BufferedImage wall, bwall, health, shield, speed, bullet;
 
 //    ArrayList gObjs = new ArrayList();
-    ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
+    private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
 
     /**
      *
@@ -43,7 +43,7 @@ public class GameWorld extends JPanel implements Runnable {
     public void run() {
         try {
             while (true) {
-                this.tick++;
+                this.tick++; // performance dependant
 //                this.background.update();
                 this.t1.update(); // update tank 1
                 this.t2.update(); //updates tank 2
@@ -93,7 +93,7 @@ public class GameWorld extends JPanel implements Runnable {
             while(mapReader.ready()) {
                 String line = mapReader.readLine();
                 String[] objs = line.split(",");
-                System.out.println(Arrays.toString(objs));
+//                System.out.println(Arrays.toString(objs));
                 for (int col = 0; col < objs.length; col++) {
                     String gameItem = objs[col];
                     if("0".equals(gameItem)) continue; // 0 means nothing in csv, skips over

@@ -1,7 +1,6 @@
 package TankGame.src;
 
-import TankGame.src.game.GameWorld;
-import TankGame.src.game.ResourceManager;
+import TankGame.src.game.*;
 import TankGame.src.menus.EndGamePanel;
 import TankGame.src.menus.StartMenuPanel;
 
@@ -10,6 +9,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 
 public class Launcher {
+
 
     /*
      * Main panel in JFrame, the layout of this panel
@@ -100,6 +100,12 @@ public class Launcher {
 
     public static void main(String[] args) {
         ResourceManager.loadAssets();
+        ResourceManager.loadAnimations();
+        ResourceManager.loadSounds();
+        ResourcePools.addPool("bullet",
+                new ResourcePool<>("bullet",
+                        Bullet.class, 500)
+                        .fillPool(500)); //creates bullet pool
         (new Launcher()).initUIComponents();
     }
 }
