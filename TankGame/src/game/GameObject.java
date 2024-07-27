@@ -6,6 +6,19 @@ import java.awt.image.BufferedImage;
 public abstract class GameObject {
     protected float x, y; // because its protected, u dont have to declare this in all subclasses of GameObject or use setters and getters
     protected BufferedImage img;
+    protected Rectangle hitbox;
+
+    public GameObject() {
+
+    }
+
+
+    public GameObject(float x, float y, BufferedImage img) {
+        this.x = x;
+        this.y = y;
+        this.img = img;
+        this.hitbox = new Rectangle((int)x, (int)y, img.getWidth(), img.getHeight());
+    }
     /**
      * * creates new game object based on type
      * @param type the type of the object to create
@@ -13,6 +26,9 @@ public abstract class GameObject {
      * @param y the y coordinate of the object
      * @return a new instance of the object
      */
+
+
+
     public static GameObject newInstance(String type, float x, float y) {
         return switch(type) { //switch expressions
             case "3", "9" -> new Wall(x, y, ResourceManager.getSprite("wall"));
@@ -28,5 +44,9 @@ public abstract class GameObject {
     // dont reduce visibility on abstract methods in subclasses
     public void drawImage(Graphics g) {
         g.drawImage(this.img, (int)x,(int)y, null); // Uses GameObject variables ONLY if there arent any in the subclass
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox.getBounds();
     }
 }

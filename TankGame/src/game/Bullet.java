@@ -22,13 +22,14 @@ public class Bullet extends GameObject implements Poolable {
     private BufferedImage img;
 
     public Bullet(BufferedImage img) {
-//        super( 0, 0, img);
+        super( 0, 0, img);
         this.vx = 0;
         this.vy = 0;
         this.angle = 0;
     }
 
     public Bullet(float x, float y, float angle, BufferedImage img) {
+        super(x, y, img);
         this.x = x;
         this.y = y;
         this.vx = 0;
