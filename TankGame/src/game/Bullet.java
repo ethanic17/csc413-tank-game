@@ -12,6 +12,7 @@ public class Bullet extends GameObject implements Poolable {
     private float y;
     private float vx;
     private float vy;
+    private int tankID = -1;
     private float angle;
 
     private float R = 5;

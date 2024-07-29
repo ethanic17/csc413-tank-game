@@ -6,12 +6,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author anthony-pc
  */
 public class Tank extends GameObject {
+    private int tankID;
     private static ResourcePool<Bullet> bulletPool = new ResourcePool<>("bullet", Bullet.class, 500);
     private float screen_x; // cannot be final
     private float screen_y;
@@ -38,6 +40,7 @@ public class Tank extends GameObject {
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         super(x, y, img);
+        this.tankID = new Random().nextInt(300);
         this.screen_x = x;
         this.screen_y = y;
         this.x = x;
@@ -51,6 +54,15 @@ public class Tank extends GameObject {
     void setX(float x){ this.x = x; }
 
     void setY(float y) { this. y = y;}
+
+    // so when a bullet is shot, it doesn't trigger a collision immdeiately with the tank
+    private int safeShootX() {
+        return (int) (x + this.img.getWidth()/2f);
+    }
+
+    private int safeShootY() {
+        return (int) (y + this.img.getHeight()/2f);
+    }
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -96,7 +108,7 @@ public class Tank extends GameObject {
         return screen_y;
     }
 
-    void update() { // pass GameWorld or GameState as a new object to get bullet access for tank?
+    void update(GameWorld gw) { // pass GameWorld or GameState as a new object to get bullet access for tank?
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -117,7 +129,8 @@ public class Tank extends GameObject {
         if (this.ShootPressed && currentTime > this.LastFired + this.cooldown) { // adds a cooldown for shooting bullets
             this.LastFired = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
-            p.initObject(x, y, angle);
+//            p.initObject(safeShootX(), safeShootY(), angle, ResourceManager.getSprite("bullet")); //TODO
+            // put this.img//resourcemanager sprite inside resource pool?  or in bullet initObject? abstract error
             this.ammo.add((Bullet)p);
 //            this.ammo.add( // creates new bullets inside arraylist ammo
 //                    new Bullet(x + this.img.getWidth()/2f,
@@ -220,7 +233,7 @@ public class Tank extends GameObject {
 
     }
 
-    public List<Bullet> getAmmo() { //TODO
-        return this.ammo;
-    }
+//    public List<Bullet> getAmmo() { //TODO
+//        return this.ammo;
+//    }
 }

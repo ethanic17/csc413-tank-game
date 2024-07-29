@@ -45,8 +45,8 @@ public class GameWorld extends JPanel implements Runnable {
         try {
             while (true) {
                 this.tick++; // performance dependant
-                this.t1.update(); // update tank 1
-                this.t2.update(); //updates tank 2
+                this.t1.update(this); // update tank 1
+                this.t2.update(this); //updates tank 2
                 this.checkCollisions();
                 this.renderFrame();
                 this.repaint();   // redraw game
@@ -62,37 +62,16 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     private void checkCollisions() {
-
-        final Tank t = this.t1;
-        for (int i = 0; i < this.gObjs.size() ; i++) {
-            // did tank 1 hit something in gameobject list
-
+        for (int i = 0; i < this.gObjs.size(); i++) {
+            GameObject obj1 = this.gObjs.get(i);
+            for (int j = 0; j < this.gObjs.size(); j++) {
+                if (i == j) continue; // so you dont collide with yourself (tank) constantly
+                GameObject obj2 = this.gObjs.get(j);
+                if (obj1.getHitbox().intersects(obj2.getHitbox())) {
+                    System.out.println("Collision Detected");
+                }
+            }
         }
-        final List<Bullet> t2Ammo = this.t2.getAmmo();
-        for (int i = 0; i < t2Ammo.size(); i++) {
-            // did t1 get hit by any t2 bullets
-        }
-
-        final Tank t2 = this.t2;
-        for (int i = 0; i < this.gObjs.size() ; i++) {
-            // did tank 2 hit something in gameobject list
-
-        }
-        final List<Bullet> t1Ammo = this.t1.getAmmo();
-        for (int i = 0; i < t1Ammo.size(); i++) {
-            // did t1 get hit by any t1 bullets
-        }
-
-//        for (int i = 0; i < this.gObjs.size(); i++) {
-//            GameObject obj1 = this.gObjs.get(i);
-//            for (int j = 0; j < this.gObjs.size(); j++) {
-//                if (i == j) continue; // so you dont collide with yourself (tank) constantly
-//                GameObject obj2 = this.gObjs.get(j);
-//                if (obj1.getHitbox().intersects(obj2.getHitbox())) {
-//                    System.out.println("Collision Detected");
-//                }
-//            }
-//        }
     }
 
     /**
@@ -214,6 +193,10 @@ public class GameWorld extends JPanel implements Runnable {
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
 
+    }
+
+    public void addGameObject(GameObject g) {
+        this.gObjs.add(g);
     }
 
 
