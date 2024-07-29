@@ -11,7 +11,8 @@ public class BWall extends GameObject {
 //        buffer.dispose();
     }
 
-    public BWall(float x, float y, BufferedImage img) { // x, y, img declared inside GameObject parent class
+    public BWall(float x, float y, BufferedImage img) {
+        super(x, y, img); // x, y, img declared inside GameObject parent class
         this.x = x;
         this.y = y;
         this.img = img;

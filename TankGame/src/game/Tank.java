@@ -37,7 +37,7 @@ public class Tank extends GameObject {
     private long LastFired = 0;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
-//        super(x, y, img);
+        super(x, y, img);
         this.screen_x = x;
         this.screen_y = y;
         this.x = x;
@@ -135,6 +135,7 @@ public class Tank extends GameObject {
             b.update();
         }
         centerScreen();
+        this.hitbox.setLocation((int)x, (int)y);
 
     }
 
@@ -217,5 +218,9 @@ public class Tank extends GameObject {
 //            b.drawImage(g);
 //        }
 
+    }
+
+    public List<Bullet> getAmmo() { //TODO
+        return this.ammo;
     }
 }

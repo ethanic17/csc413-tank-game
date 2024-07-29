@@ -44,7 +44,7 @@ public class Bullet extends GameObject implements Poolable {
         x += vx;
         y += vy;
         checkBorder();
-        checkWall();
+        this.hitbox.setLocation((int)x, (int)y);
     }
 
     private void rotateLeft() {
@@ -65,14 +65,6 @@ public class Bullet extends GameObject implements Poolable {
             y = GameConstants.GAME_SCREEN_HEIGHT - 80;
         }
     }
-
-
-
-    // checks if wall is in direction
-    private void checkWall() {
-
-    }
-
 
 
     void drawImage(Graphics2D g) {
@@ -103,19 +95,5 @@ public class Bullet extends GameObject implements Poolable {
         this.x = -5;
         this.y = -5;
     }
-
-//    public void handleCollision(Object with) {
-//        if (with instanceof Bullet) {
-//            // lose health
-//        } else if (with instanceof HealthPowerup) {
-//            // gain health
-//        } else if (with instanceof ShieldPowerup) {
-//            // gain shield
-//        } else if (with instanceof SpeedPowerup) {
-//            // gain speed
-//        } else if (with instanceof Wall) {
-//            // stop or undo move
-//        }
-//    }
 
 }

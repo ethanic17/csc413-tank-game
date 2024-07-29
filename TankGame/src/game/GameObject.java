@@ -8,16 +8,16 @@ public abstract class GameObject {
     protected BufferedImage img;
     protected Rectangle hitbox;
 
-    public GameObject() {
-
-    }
+//    public GameObject() {
+//
+//    }
 
 
     public GameObject(float x, float y, BufferedImage img) {
         this.x = x;
         this.y = y;
         this.img = img;
-        this.hitbox = new Rectangle((int)x, (int)y, img.getWidth(), img.getHeight());
+        this.hitbox = new Rectangle((int)x, (int)y, img.getWidth(), img.getHeight()); // creates a rectangle hitbox for every game object
     }
     /**
      * * creates new game object based on type

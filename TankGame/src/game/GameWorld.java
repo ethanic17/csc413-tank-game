@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.List;
 
 /**
  * @author anthony-pc
@@ -44,11 +45,10 @@ public class GameWorld extends JPanel implements Runnable {
         try {
             while (true) {
                 this.tick++; // performance dependant
-//                this.background.update();
                 this.t1.update(); // update tank 1
                 this.t2.update(); //updates tank 2
+                this.checkCollisions();
                 this.renderFrame();
-//                this.bwall.update(); // updates breakwable wall TODO
                 this.repaint();   // redraw game
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
@@ -59,6 +59,40 @@ public class GameWorld extends JPanel implements Runnable {
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
         }
+    }
+
+    private void checkCollisions() {
+
+        final Tank t = this.t1;
+        for (int i = 0; i < this.gObjs.size() ; i++) {
+            // did tank 1 hit something in gameobject list
+
+        }
+        final List<Bullet> t2Ammo = this.t2.getAmmo();
+        for (int i = 0; i < t2Ammo.size(); i++) {
+            // did t1 get hit by any t2 bullets
+        }
+
+        final Tank t2 = this.t2;
+        for (int i = 0; i < this.gObjs.size() ; i++) {
+            // did tank 2 hit something in gameobject list
+
+        }
+        final List<Bullet> t1Ammo = this.t1.getAmmo();
+        for (int i = 0; i < t1Ammo.size(); i++) {
+            // did t1 get hit by any t1 bullets
+        }
+
+//        for (int i = 0; i < this.gObjs.size(); i++) {
+//            GameObject obj1 = this.gObjs.get(i);
+//            for (int j = 0; j < this.gObjs.size(); j++) {
+//                if (i == j) continue; // so you dont collide with yourself (tank) constantly
+//                GameObject obj2 = this.gObjs.get(j);
+//                if (obj1.getHitbox().intersects(obj2.getHitbox())) {
+//                    System.out.println("Collision Detected");
+//                }
+//            }
+//        }
     }
 
     /**
@@ -98,7 +132,6 @@ public class GameWorld extends JPanel implements Runnable {
                     String gameItem = objs[col];
                     if("0".equals(gameItem)) continue; // 0 means nothing in csv, skips over
                     this.gObjs.add(GameObject.newInstance(gameItem, col*32, row*32)); // implementation inside GameObject class
-//                    System.out.println(gameItem);
                 }
                 row++;
             }
@@ -114,17 +147,11 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
-//        this.gameObjects.add(t1);
+        this.gObjs.add(t1);
+        this.gObjs.add(t2);
         //TODO add tank1 and  2 to game objects
 
         background = ResourceManager.getSprite("background");
-//        wall = ResourceManager.getSprite("wall");
-//        bwall = ResourceManager.getSprite("bwall");
-//        health = ResourceManager.getSprite("health");
-//        shield = ResourceManager.getSprite("shield");
-//        speed = ResourceManager.getSprite("speed");
-//        bullet = ResourceManager.getSprite("bullet");
-
     }
 
     private void renderFloor(Graphics buffer){
