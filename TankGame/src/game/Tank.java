@@ -17,8 +17,6 @@ public class Tank extends GameObject implements Updateable {
     private static ResourcePool<Bullet> bulletPool = new ResourcePool<>("bullet", Bullet.class, 500);
     private float screen_x; // cannot be final
     private float screen_y;
-    private float x;
-    private float y;
     private float vx;
     private float vy;
     private float angle;
@@ -33,7 +31,7 @@ public class Tank extends GameObject implements Updateable {
     private boolean LeftPressed;
     private boolean ShootPressed;
 
-    Bullet b;
+  //  Bullet b;
 //    List<Bullet> ammo = new ArrayList<Bullet>(); // store list here or in gameworld? Easier for collisions here, Tank owns the bullets
     private long cooldown = 1500; // 1.5 seconds, how fast the user can shoot before cooldown/reload
     private long LastFired = 0;
@@ -136,10 +134,6 @@ public class Tank extends GameObject implements Updateable {
             gw.addGameObject(b);
             ResourceManager.getSound("shooting").play(); //TODO check sound
         }
-
-        if (b != null) { // only allows user to have 1 bullet at a time
-            b.update(gw);
-        }
         centerScreen();
         this.hitbox.setLocation((int)x, (int)y);
 
@@ -212,10 +206,11 @@ public class Tank extends GameObject implements Updateable {
     }
 
 
-    public void drawImage(Graphics2D g) {
+    public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
-        g.drawImage(this.img, rotation, null);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(this.img, rotation, null);
 
 
 //        if( b != null) {
@@ -224,7 +219,7 @@ public class Tank extends GameObject implements Updateable {
 
     }
 
-    public void handleCollision(GameObject by) {
+    public void handleCollision(GameObject by) { //TODO move to GameObject
         if(by instanceof Bullet) {
             // lose health
         }else if (by instanceof Wall) {
@@ -238,6 +233,8 @@ public class Tank extends GameObject implements Updateable {
             // gain shield
         }
     }
+
+
 
     public void setSpeed(float speed) {
         this.R = speed;

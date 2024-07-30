@@ -65,14 +65,12 @@ public class GameWorld extends JPanel implements Runnable {
                 for (int i = this.gObjs.size()-1; i >= 0; i--) {
                     if(this.gObjs.get(i) instanceof Updateable u) {
                         u.update(this);
-                    } else {
-                        break;
                     }
                 }
                 for(int i = 0; i < this.anims.size(); i++){
                     this.anims.get(i).update();
                 }
-                this.checkCollisions();
+               // this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.renderFrame();
                 this.repaint();   // redraw game
@@ -211,8 +209,8 @@ public class GameWorld extends JPanel implements Runnable {
 
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
-        this.t1.drawImage(buffer);
-        this.t2.drawImage(buffer);
+        //this.t1.drawImage(buffer);
+       // this.t2.drawImage(buffer);
 //        g2.drawImage(world, 0, 0, null);
 
         for(int i = 0; i < this.anims.size(); i++){

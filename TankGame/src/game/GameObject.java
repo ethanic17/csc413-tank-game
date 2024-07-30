@@ -54,4 +54,6 @@ public abstract class GameObject {
     public boolean getHasCollided() {
         return this.hasCollided;
     }
+
+
 }

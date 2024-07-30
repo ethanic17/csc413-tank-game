@@ -19,8 +19,8 @@ public class Bullet extends GameObject implements Poolable, Updateable {
     private float ROTATIONSPEED = 3.0f;
 
 //    private final int tankId;
-
-    private BufferedImage img;
+//
+//    private BufferedImage img;
 
     public Bullet(BufferedImage img) {
         super( 0, 0, img);
@@ -72,14 +72,16 @@ public class Bullet extends GameObject implements Poolable, Updateable {
     }
 
 
-    void drawImage(Graphics2D g) {
+    public void drawImage(Graphics g) {
         if (this.img == null) {
             System.err.println("Bullet img is not intlized");
             return;
         }
+
+        final Graphics2D g2d = (Graphics2D) g;
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
-        g.drawImage(this.img, rotation, null);
+        g2d.drawImage(this.img, rotation, null);
 //        g2d.setColor(Color.RED);
         //g2d.rotate(Math.toRadians(angle), bounds.x + bounds.width/2, bounds.y + bounds.height/2);
 //        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
