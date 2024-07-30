@@ -1,6 +1,7 @@
 package TankGame.src.game;
 
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class Sound {
     private Clip clip; // on another thread
@@ -30,5 +31,11 @@ public class Sound {
     }
 
     public void loopContinuously() {
-        this.clip.loop(Clip.LOOP_CONTINUOUSLY);} // playes foever
+        this.clip.loop(Clip.LOOP_CONTINUOUSLY); // playes foever
+    }
+
+    public void setVolume(float level) {
+        FloatControl volume = (FloatControl) this.clip.getControl(FloatControl.Type.MASTER_GAIN);
+        volume.setValue(20.0f * (float) Math.log10(level));
+    }
 }

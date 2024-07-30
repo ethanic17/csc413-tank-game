@@ -134,6 +134,7 @@ public class Tank extends GameObject implements Updateable {
             Bullet b = (Bullet)p;
             b.setOwner(this.tankID); // every bullet has a tank owner and ID
             gw.addGameObject(b);
+            ResourceManager.getSound("shooting").play(); //TODO check sound
         }
 
         if (b != null) { // only allows user to have 1 bullet at a time

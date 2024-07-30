@@ -1,23 +1,40 @@
 package TankGame.src.game;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ResourceManager { // loads all resources in one class and can refer to them in other classes
     private final static Map<String, BufferedImage> sprites = new HashMap<>();
     private final static Map<String, Sound> sounds = new HashMap<>();
     private final static Map<String, List<BufferedImage>> anims = new HashMap<>();
+    private final static Map<String, Integer> animInfo = new HashMap<>(){{
+        put("bullethit", 24);
+        put("bulletshoot", 24);
+        put("powerpick", 32);
+        put("puffsmoke", 32);
+        put("rocketflame", 16);
+        put("rockethit", 32);
+    }};
 
     private static BufferedImage loadSprite(String path) throws IOException {
         return ImageIO.read(
                 Objects.requireNonNull(ResourceManager.class.getClassLoader().getResource(path), "Resource %s was not found".formatted(path))
         );
+    }
+
+    private static Sound loadSound(String path) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        AudioInputStream ais = AudioSystem.getAudioInputStream(
+                Objects.requireNonNull(
+                        ResourceManager.class.getClassLoader().getResource(path),
+                        "Sound Resource %s was not found".formatted(path)
+        ));
+        Clip c = AudioSystem.getClip();
+        c.open(ais); // loads sound into clip/ais
+        Sound s = new Sound(c);
+        return s;
     }
 
     // throws IOException throws exception back to caller, if not handled there it'll throw back to JVM and then JVM crashes
@@ -35,12 +52,32 @@ public class ResourceManager { // loads all resources in one class and can refer
         ResourceManager.sprites.put("bullet", loadSprite("bullet.png"));
     }
 
-    private static void initSounds(){
-        //TODO load sounds
+    private static void initSounds()  {
+        try {
+            ResourceManager.sounds.put("bg", loadSound("sounds/Music.mid")); // java only supports wav?
+            ResourceManager.sounds.put("bullet_collide", loadSound("sounds/bullet.wav"));
+            ResourceManager.sounds.put("pickup", loadSound("sounds/pickup.wav"));
+            ResourceManager.sounds.put("shooting", loadSound("sounds/shotfiring.wav"));
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    private static void initAnimations(){
-        //TODO load animations
+    private static void initAnims(){
+        String baseFormat = "animations/%s/%s_%04d.png";
+        ResourceManager.animInfo.forEach((animationName, frameCount) -> { // refers to animInfo Hashmap to format resource list for each frames
+            List<BufferedImage> f = new ArrayList<>(frameCount);
+            try {
+                for (int i = 0; i < frameCount; i++) {
+                    String spritePath = String.format(baseFormat, animationName, animationName, i);
+                    f.add(loadSprite(spritePath));
+                }
+                ResourceManager.anims.put(animationName, f);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
@@ -48,24 +85,11 @@ public class ResourceManager { // loads all resources in one class and can refer
     public static void loadAssets() {
         try {
             initSprites();
+            initSounds();
+            initAnims();
+//            System.out.println();
         } catch (IOException e) {
             throw new RuntimeException("Error loading assets", e);
-        }
-    }
-
-    public static void loadSounds() {
-        try {
-            initSounds();
-        } catch (Exception e) {
-            throw new RuntimeException("Error loading sounds", e);
-        }
-    }
-
-    public static void loadAnimations() {
-        try {
-            initAnimations();
-        } catch (Exception e) {
-            throw new RuntimeException("Error loading animations", e);
         }
     }
 
@@ -95,11 +119,9 @@ public class ResourceManager { // loads all resources in one class and can refer
         }
         return ResourceManager.anims.get(key);
     }
-
-    public static void main(String[] args) { // check if assets r all loading, if any errors then u fucked up somewhere lol
-        ResourceManager.loadAssets();
-        ResourceManager.loadSounds();
-        ResourceManager.loadAnimations();
-        System.out.println();
-    }
+//
+//    public static void main(String[] args) { // check if assets r all loading, if any errors then u fucked up somewhere lol
+//        ResourceManager.loadAssets();
+//        System.out.println();
+//    }
 }

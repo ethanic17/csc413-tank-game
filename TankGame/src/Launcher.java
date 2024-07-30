@@ -100,8 +100,6 @@ public class Launcher {
 
     public static void main(String[] args) {
         ResourceManager.loadAssets();
-        ResourceManager.loadAnimations();
-        ResourceManager.loadSounds();
         ResourcePools.addPool("bullet",
                 new ResourcePool<>("bullet",
                         Bullet.class, 500)

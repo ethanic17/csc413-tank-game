@@ -29,11 +29,9 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
     private BufferedImage background;
     private BufferedImage wall, bwall, health, shield, speed, bullet;
-
     private BufferedImage bulletImage;
-
-//    ArrayList gObjs = new ArrayList();
     private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
+    List<Animation> anims = new ArrayList<>();
 
     /**
      *
@@ -49,7 +47,17 @@ public class GameWorld extends JPanel implements Runnable {
 
     @Override
     public void run() {
+//        this.resetGame();
+        Sound bg = ResourceManager.getSound("bg"); // plays baxkground music
+        bg.loopContinuously();
+        bg.play();
         try {
+            this.anims.add(new Animation(100, 100, ResourceManager.getAnim("puffsmoke")));
+            this.anims.add(new Animation(200, 200, ResourceManager.getAnim("rocketflame")));
+            this.anims.add(new Animation(300, 300, ResourceManager.getAnim("rockethit")));
+            this.anims.add(new Animation(400, 400, ResourceManager.getAnim("bullethit")));
+            this.anims.add(new Animation(500, 500, ResourceManager.getAnim("bulletshoot")));
+            this.anims.add(new Animation(600, 600, ResourceManager.getAnim("powerpick")));
             while (true) {
                 this.tick++; // performance dependant
 //                this.t1.update(this); // update tank 1
@@ -60,6 +68,9 @@ public class GameWorld extends JPanel implements Runnable {
                     } else {
                         break;
                     }
+                }
+                for(int i = 0; i < this.anims.size(); i++){
+                    this.anims.get(i).update();
                 }
                 this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
@@ -188,6 +199,9 @@ public class GameWorld extends JPanel implements Runnable {
 
 
 
+
+
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // for bg image, load badkground before tanks
@@ -201,9 +215,15 @@ public class GameWorld extends JPanel implements Runnable {
         this.t2.drawImage(buffer);
 //        g2.drawImage(world, 0, 0, null);
 
+        for(int i = 0; i < this.anims.size(); i++){
+            this.anims.get(i).render(buffer);
+        }
+
         // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
+
+
     }
 
     public void addGameObject(GameObject g) {
