@@ -9,7 +9,6 @@ public class Wall extends GameObject {
         this.x = x;
         this.y = y;
         this.img = img;
-
     }
 
 }

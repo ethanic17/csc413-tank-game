@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author anthony-pc
  */
-public class Tank extends GameObject {
+public class Tank extends GameObject implements Updateable {
     private int tankID;
     private static ResourcePool<Bullet> bulletPool = new ResourcePool<>("bullet", Bullet.class, 500);
     private float screen_x; // cannot be final
@@ -34,7 +34,7 @@ public class Tank extends GameObject {
     private boolean ShootPressed;
 
     Bullet b;
-    List<Bullet> ammo = new ArrayList<Bullet>(); // store list here or in gameworld? Easier for collisions here, Tank owns the bullets
+//    List<Bullet> ammo = new ArrayList<Bullet>(); // store list here or in gameworld? Easier for collisions here, Tank owns the bullets
     private long cooldown = 1500; // 1.5 seconds, how fast the user can shoot before cooldown/reload
     private long LastFired = 0;
 
@@ -108,7 +108,7 @@ public class Tank extends GameObject {
         return screen_y;
     }
 
-    void update(GameWorld gw) { // pass GameWorld or GameState as a new object to get bullet access for tank?
+    public void update(GameWorld gw) { // pass GameWorld or GameState as a new object to get bullet access for tank?
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -129,23 +129,15 @@ public class Tank extends GameObject {
         if (this.ShootPressed && currentTime > this.LastFired + this.cooldown) { // adds a cooldown for shooting bullets
             this.LastFired = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
-//            p.initObject(safeShootX(), safeShootY(), angle, ResourceManager.getSprite("bullet")); //TODO
-            // put this.img//resourcemanager sprite inside resource pool?  or in bullet initObject? abstract error
-            this.ammo.add((Bullet)p);
-//            this.ammo.add( // creates new bullets inside arraylist ammo
-//                    new Bullet(x + this.img.getWidth()/2f,
-//                            y+ this.img.getHeight()/2f,
-//                            angle, // +15, -15, multi-shot powerup?
-//                            ResourceManager.getSprite("bullet")));
-
-        }
-
-        for (int i = 0; i< this.ammo.size(); i++){
-            this.ammo.get(i).update();
+            p.initObject(safeShootX(), safeShootY(), angle); //TODO
+//            this.ammo.add((Bullet)p);
+            Bullet b = (Bullet)p;
+            b.setOwner(this.tankID); // every bullet has a tank owner and ID
+            gw.addGameObject(b);
         }
 
         if (b != null) { // only allows user to have 1 bullet at a time
-            b.update();
+            b.update(gw);
         }
         centerScreen();
         this.hitbox.setLocation((int)x, (int)y);
@@ -224,13 +216,30 @@ public class Tank extends GameObject {
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         g.drawImage(this.img, rotation, null);
 
-        for(int i = 0; i< this.ammo.size(); i++){
-            this.ammo.get(i).drawImage(g);
-        }
+
 //        if( b != null) {
 //            b.drawImage(g);
 //        }
 
+    }
+
+    public void handleCollision(GameObject by) {
+        if(by instanceof Bullet) {
+            // lose health
+        }else if (by instanceof Wall) {
+            // stop moving (use vx and vy?)
+        } else if (by instanceof HealthPowerup) {
+            // gain health
+        } else if (by instanceof SpeedPowerup) {
+            // increase speed
+            this.setSpeed(50);
+        } else if (by instanceof ShieldPowerup) {
+            // gain shield
+        }
+    }
+
+    public void setSpeed(float speed) {
+        this.R = speed;
     }
 
 //    public List<Bullet> getAmmo() { //TODO

@@ -30,6 +30,8 @@ public class GameWorld extends JPanel implements Runnable {
     private BufferedImage background;
     private BufferedImage wall, bwall, health, shield, speed, bullet;
 
+    private BufferedImage bulletImage;
+
 //    ArrayList gObjs = new ArrayList();
     private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
 
@@ -37,6 +39,11 @@ public class GameWorld extends JPanel implements Runnable {
      *
      */
     public GameWorld(Launcher lf) {
+        try {
+            bulletImage = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("bullet.png")));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         this.lf = lf;
     }
 
@@ -45,9 +52,17 @@ public class GameWorld extends JPanel implements Runnable {
         try {
             while (true) {
                 this.tick++; // performance dependant
-                this.t1.update(this); // update tank 1
-                this.t2.update(this); //updates tank 2
+//                this.t1.update(this); // update tank 1
+//                this.t2.update(this); //updates tank 2
+                for (int i = this.gObjs.size()-1; i >= 0; i--) {
+                    if(this.gObjs.get(i) instanceof Updateable u) {
+                        u.update(this);
+                    } else {
+                        break;
+                    }
+                }
                 this.checkCollisions();
+                this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.renderFrame();
                 this.repaint();   // redraw game
                 /*
@@ -68,7 +83,9 @@ public class GameWorld extends JPanel implements Runnable {
                 if (i == j) continue; // so you dont collide with yourself (tank) constantly
                 GameObject obj2 = this.gObjs.get(j);
                 if (obj1.getHitbox().intersects(obj2.getHitbox())) {
+//                    obj1.handleCollision(obj2); // handles object hit inside Tank
                     System.out.println("Collision Detected");
+                    //TODO check for collision between game objects (dont use a million for loops)
                 }
             }
         }
@@ -122,7 +139,7 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         this.lf.getJf().addKeyListener(tc1);
 
-        t2 = new Tank(400, 400, 0, 0,  (short) 0, ResourceManager.getSprite("t2"));
+        t2 = new Tank(1500, 300, 0, 0,  (short) 0, ResourceManager.getSprite("t2"));
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
@@ -166,6 +183,7 @@ public class GameWorld extends JPanel implements Runnable {
         // 1:05:46 in CSC 413 MM & Split Screen Lexture
         // ?? doesnt work bc of buffer
         // dispatch thread ang game thread
+        // optional? TODO
     }
 
 
@@ -175,16 +193,10 @@ public class GameWorld extends JPanel implements Runnable {
         super.paintComponent(g); // for bg image, load badkground before tanks
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
-        //        this.setBackground(Color.BLACK);
-
-        // TODO why dpes this shit drop my fps to like 3
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
         // renders game objects from csv
-        this.gObjs.forEach(go -> go.drawImage(buffer));
-
-        //TODO close breakable wall buffer when shot at by tank
-
+        this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
 //        g2.drawImage(world, 0, 0, null);
@@ -192,7 +204,6 @@ public class GameWorld extends JPanel implements Runnable {
         // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
-
     }
 
     public void addGameObject(GameObject g) {

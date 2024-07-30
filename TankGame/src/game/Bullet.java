@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class Bullet extends GameObject implements Poolable {
+public class Bullet extends GameObject implements Poolable, Updateable {
     private float x;
     private float y;
     private float vx;
@@ -39,7 +39,7 @@ public class Bullet extends GameObject implements Poolable {
         this.angle = angle;
     }
 
-    void update() {
+    public void update(GameWorld gw) {
         vx = Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
@@ -67,8 +67,16 @@ public class Bullet extends GameObject implements Poolable {
         }
     }
 
+    public void setOwner(int id){
+        this.tankID = id;
+    }
+
 
     void drawImage(Graphics2D g) {
+        if (this.img == null) {
+            System.err.println("Bullet img is not intlized");
+            return;
+        }
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         g.drawImage(this.img, rotation, null);
@@ -95,6 +103,10 @@ public class Bullet extends GameObject implements Poolable {
     public void resetObject() {
         this.x = -5;
         this.y = -5;
+    }
+
+    public int getOwner() { // which tank owns bullet shot
+        return this.tankID;
     }
 
 }

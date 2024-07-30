@@ -7,6 +7,7 @@ public abstract class GameObject {
     protected float x, y; // because its protected, u dont have to declare this in all subclasses of GameObject or use setters and getters
     protected BufferedImage img;
     protected Rectangle hitbox;
+    protected boolean hasCollided = false;
 
 //    public GameObject() {
 //
@@ -48,5 +49,9 @@ public abstract class GameObject {
 
     public Rectangle getHitbox() {
         return hitbox.getBounds();
+    }
+
+    public boolean getHasCollided() {
+        return this.hasCollided;
     }
 }

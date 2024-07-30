@@ -9,7 +9,5 @@ public class ShieldPowerup extends GameObject {
         this.x = x;
         this.y = y;
         this.img = img;
-
-
     }
 }

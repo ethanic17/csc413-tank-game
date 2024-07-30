@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public class ResourceManager { // loads all resources in one class and can refer to them in other classes
     private final static Map<String, BufferedImage> sprites = new HashMap<>();
-    private final static Map<String, Clip> sounds = new HashMap<>();
-    private final static Map<String, List<BufferedImage>> animations = new HashMap<>();
+    private final static Map<String, Sound> sounds = new HashMap<>();
+    private final static Map<String, List<BufferedImage>> anims = new HashMap<>();
 
     private static BufferedImage loadSprite(String path) throws IOException {
         return ImageIO.read(
@@ -76,6 +76,24 @@ public class ResourceManager { // loads all resources in one class and can refer
             );
         }
         return ResourceManager.sprites.get(key);
+    }
+
+    public static Sound getSound(String key) {
+        if (!ResourceManager.sounds.containsKey(key)) {
+            throw new IllegalArgumentException(
+                    "Resource %s is not in map".formatted(key)
+            );
+        }
+        return ResourceManager.sounds.get(key);
+    }
+
+    public static List<BufferedImage> getAnim(String key) {
+        if (!ResourceManager.anims.containsKey(key)) {
+            throw new IllegalArgumentException(
+                    "Resource %s is not in map".formatted(key)
+            );
+        }
+        return ResourceManager.anims.get(key);
     }
 
     public static void main(String[] args) { // check if assets r all loading, if any errors then u fucked up somewhere lol
