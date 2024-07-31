@@ -85,7 +85,6 @@ public class Bullet extends GameObject implements Poolable, Updateable {
 //        g2d.setColor(Color.RED);
         //g2d.rotate(Math.toRadians(angle), bounds.x + bounds.width/2, bounds.y + bounds.height/2);
 //        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
-
     }
 
     @Override
@@ -110,5 +109,19 @@ public class Bullet extends GameObject implements Poolable, Updateable {
     public int getOwner() { // which tank owns bullet shot
         return this.tankID;
     }
+
+    @Override
+    public void handleCollision(GameObject by) { // handles wall collision when bullet hits a bwall or wall so doesnt fly thru wall
+        if(by instanceof Wall || by instanceof BWall) {
+            this.x -= this.vx;
+            this.y -= this.vy;
+            this.vx = 0;
+            this.vy = 0;
+        }
+    }
+
+
+
+
 
 }

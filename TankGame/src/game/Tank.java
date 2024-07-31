@@ -4,8 +4,6 @@ import TankGame.src.GameConstants;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,6 +18,8 @@ public class Tank extends GameObject implements Updateable {
     private float vx;
     private float vy;
     private float angle;
+
+    private int health = 100;
 
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
@@ -211,30 +211,30 @@ public class Tank extends GameObject implements Updateable {
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-
-
-//        if( b != null) {
-//            b.drawImage(g);
-//        }
-
     }
 
-    public void handleCollision(GameObject by) { //TODO move to GameObject
+    @Override
+    public void handleCollision(GameObject by) {
         if(by instanceof Bullet) {
-            // lose health
-        }else if (by instanceof Wall) {
-            // stop moving (use vx and vy?)
+            this.health -= 1; // aprox 15 hp per hit? frame wise
+            System.out.println(health);
+        }else if (by instanceof Wall || by instanceof BWall) {
+            this.x -= this.vx;
+            this.y -= this.vy;
+            this.vx = 0;
+            this.vy = 0;
         } else if (by instanceof HealthPowerup) {
-            // gain health
+            this.health += 20;
         } else if (by instanceof SpeedPowerup) {
-            // increase speed
-            this.setSpeed(50);
+            setSpeed(10);
         } else if (by instanceof ShieldPowerup) {
             // gain shield
         }
     }
 
-
+    public int getHealth(){
+        return this.health;
+    }
 
     public void setSpeed(float speed) {
         this.R = speed;

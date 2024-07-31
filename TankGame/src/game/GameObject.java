@@ -56,4 +56,7 @@ public abstract class GameObject {
     }
 
 
+    public void handleCollision(GameObject by) {
+        // empty method for override in Tank.java
+    }
 }

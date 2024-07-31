@@ -33,6 +33,8 @@ public class GameWorld extends JPanel implements Runnable {
     private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
     List<Animation> anims = new ArrayList<>();
 
+    private int maxHealth = 100;
+
     /**
      *
      */
@@ -70,10 +72,11 @@ public class GameWorld extends JPanel implements Runnable {
                 for(int i = 0; i < this.anims.size(); i++){
                     this.anims.get(i).update();
                 }
-               // this.checkCollisions();
+                this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.renderFrame();
                 this.repaint();   // redraw game
+                this.winCondition();
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
                  * loop run at a fixed rate per/sec. 
@@ -90,12 +93,21 @@ public class GameWorld extends JPanel implements Runnable {
             GameObject obj1 = this.gObjs.get(i);
             for (int j = 0; j < this.gObjs.size(); j++) {
                 if (i == j) continue; // so you dont collide with yourself (tank) constantly
-                GameObject obj2 = this.gObjs.get(j);
-                if (obj1.getHitbox().intersects(obj2.getHitbox())) {
-//                    obj1.handleCollision(obj2); // handles object hit inside Tank
-                    System.out.println("Collision Detected");
-                    //TODO check for collision between game objects (dont use a million for loops)
+                if (obj1 instanceof Tank) {
+                    GameObject obj2 = this.gObjs.get(j);
+                    if (obj1.getHitbox().intersects(obj2.getHitbox())) {
+                        obj1.handleCollision(obj2); // handles object hit inside Tank
+//                        System.out.println("Collision Detected");
+                    }
                 }
+
+                if(obj1 instanceof Bullet) { // to stop bullets from going past walls
+                    GameObject obj2 = this.gObjs.get(j);
+                    if(obj1.getHitbox().intersects(obj2.getHitbox())) {
+                        obj1.handleCollision(obj2);
+                    }
+                }
+
             }
         }
     }
@@ -186,6 +198,41 @@ public class GameWorld extends JPanel implements Runnable {
 
         BufferedImage rh = this.world.getSubimage((int)this.t2.getScreen_x(), (int)this.t2.getScreen_y(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
         onScreenPanel.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
+    }
+
+    private void displayHealthBar(Graphics2D onScreenPanel) {
+        BufferedImage lh  = null;
+        onScreenPanel.drawImage(lh, 0, 0, null);
+
+        BufferedImage rh = null;
+        onScreenPanel.drawImage(rh, 0, 0, null);
+    }
+
+    private void winCondition() {
+        if (t1.getHealth() == 0) {
+            System.out.println("Player 2 wins!");
+            System.exit(0);
+        } else if (t2.getHealth() == 0) {
+            System.out.println("Player 1 wins!");
+            System.exit(0);
+        }
+    }
+
+//    private void displayHealthBar() {
+//        Rectangle healthBar1 = new Rectangle(200.0, 50.0, Color.RED);
+//        Rectangle healthBar2 = new Rectangle(200.0, 50.0, Color.BLUE);
+//
+//
+//    }
+
+    private void calculateHealth(int health) {
+
+//        if (this.t1.getHealth() == 100) {
+//
+//        }
+
+        float bar = (health / maxHealth);
+//        float width = (bar * maxWidth);
     }
 
     private void renderFrame() { // offloading onto anthoer thread
