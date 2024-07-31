@@ -19,5 +19,10 @@ public class BWall extends GameObject {
 
     }
 
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle((int)x, (int)y, img.getWidth(), img.getHeight());
+    }
+
 
 }

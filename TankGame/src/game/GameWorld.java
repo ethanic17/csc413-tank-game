@@ -34,6 +34,7 @@ public class GameWorld extends JPanel implements Runnable {
     List<Animation> anims = new ArrayList<>();
 
     private int maxHealth = 100;
+    private static GameWorld instance;
 
     /**
      *
@@ -273,6 +274,18 @@ public class GameWorld extends JPanel implements Runnable {
 
     public void addGameObject(GameObject g) {
         this.gObjs.add(g);
+    }
+
+    public static GameWorld getInstance() {
+        if(instance == null) {
+            instance = new GameWorld(null);
+        }
+        return instance;
+    }
+
+    public void removeGameObject(GameObject obj) {
+        this.gObjs.remove(obj);
+        this.repaint();
     }
 
 

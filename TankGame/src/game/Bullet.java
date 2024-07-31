@@ -112,11 +112,15 @@ public class Bullet extends GameObject implements Poolable, Updateable {
 
     @Override
     public void handleCollision(GameObject by) { // handles wall collision when bullet hits a bwall or wall so doesnt fly thru wall
-        if(by instanceof Wall || by instanceof BWall) {
+        if(by instanceof Wall) {
             this.x -= this.vx;
             this.y -= this.vy;
             this.vx = 0;
             this.vy = 0;
+        } else if(by instanceof BWall) {
+            GameWorld gw = GameWorld.getInstance();
+            gw.removeGameObject(by);
+            gw.repaint();
         }
     }
 
