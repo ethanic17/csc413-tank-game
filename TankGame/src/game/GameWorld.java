@@ -257,9 +257,6 @@ public class GameWorld extends JPanel implements Runnable {
 
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
-        //this.t1.drawImage(buffer);
-       // this.t2.drawImage(buffer);
-//        g2.drawImage(world, 0, 0, null);
 
         for(int i = 0; i < this.anims.size(); i++){
             this.anims.get(i).render(buffer);

@@ -9,11 +9,6 @@ public abstract class GameObject {
     protected Rectangle hitbox;
     protected boolean hasCollided = false;
 
-//    public GameObject() {
-//
-//    }
-
-
     public GameObject(float x, float y, BufferedImage img) {
         this.x = x;
         this.y = y;
@@ -28,8 +23,6 @@ public abstract class GameObject {
      * @return a new instance of the object
      */
 
-
-
     public static GameObject newInstance(String type, float x, float y) {
         return switch(type) { //switch expressions
             case "3", "9" -> new Wall(x, y, ResourceManager.getSprite("wall"));
@@ -41,8 +34,7 @@ public abstract class GameObject {
         };
     }
 
-    // setters and getters?
-    // dont reduce visibility on abstract methods in subclasses
+    // FYI dont reduce visibility on abstract methods in subclasses
     public void drawImage(Graphics g) {
         g.drawImage(this.img, (int)x,(int)y, null); // Uses GameObject variables ONLY if there arent any in the subclass
     }
@@ -55,8 +47,8 @@ public abstract class GameObject {
         return this.hasCollided;
     }
 
-
     public void handleCollision(GameObject by) {
-        // empty method for override in Tank.java
+        // empty method for override in Tank.java and Bullet.java
+        // reference obj GameObjects in GameWorld.java
     }
 }
