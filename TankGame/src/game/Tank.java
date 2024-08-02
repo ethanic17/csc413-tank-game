@@ -220,18 +220,21 @@ public class Tank extends GameObject implements Updateable {
     public void handleCollision(GameObject by) {
         if(by instanceof Bullet) { // verifies bullets from self does not inflict damage
             if(((Bullet) by).getOwner() != this.tankID) {
-                this.health -= 1; // aprox 15 hp per hit? frame wise
+                this.health -= 1; // approx 15 hp per hit? frame wise
                 System.out.println(health);
             }
-        }else if (by instanceof Wall || by instanceof BWall) {
+        }else if (by instanceof Wall || by instanceof BWall) { // resets tank position if collides with wall
             this.x -= this.vx;
             this.y -= this.vy;
             this.vx = 0;
             this.vy = 0;
         } else if (by instanceof HealthPowerup) {
             this.health += 20;
+            by.setHasCollided(); // removes health powerup from map
+            System.out.println(health);
         } else if (by instanceof SpeedPowerup) {
             setSpeed(10);
+            by.setHasCollided();
         } else if (by instanceof ShieldPowerup) {
             // gain shield
         }

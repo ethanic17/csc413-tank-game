@@ -75,7 +75,6 @@ public class GameWorld extends JPanel implements Runnable {
                 }
                 this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
-                this.renderFrame();
                 this.repaint();   // redraw game
                 this.winCondition();
                 /*
@@ -236,18 +235,6 @@ public class GameWorld extends JPanel implements Runnable {
 //        float width = (bar * maxWidth);
     }
 
-    private void renderFrame() { // offloading onto anthoer thread
-        // 1:05:46 in CSC 413 MM & Split Screen Lexture
-        // ?? doesnt work bc of buffer
-        // dispatch thread ang game thread
-        // optional? TODO
-    }
-
-
-
-
-
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // for bg image, load badkground before tanks
@@ -287,11 +274,6 @@ public class GameWorld extends JPanel implements Runnable {
             instance = new GameWorld(null);
         }
         return instance;
-    }
-
-    public void removeGameObject(GameObject obj) {
-        this.gObjs.remove(obj);
-        this.repaint();
     }
 
 

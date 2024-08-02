@@ -47,6 +47,10 @@ public abstract class GameObject {
         return this.hasCollided;
     }
 
+    public void setHasCollided() {
+        this.hasCollided = true;
+    }
+
     public void handleCollision(GameObject by) {
         // empty method for override in Tank.java and Bullet.java
         // reference obj GameObjects in GameWorld.java

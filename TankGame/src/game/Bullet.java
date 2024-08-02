@@ -108,9 +108,7 @@ public class Bullet extends GameObject implements Poolable, Updateable {
             this.vx = 0;
             this.vy = 0;
         } else if(by instanceof BWall) {
-            GameWorld gw = GameWorld.getInstance();
-            gw.removeGameObject(by);
-            gw.repaint();
+            by.setHasCollided();
         }
     }
 
