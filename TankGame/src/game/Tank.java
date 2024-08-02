@@ -36,6 +36,8 @@ public class Tank extends GameObject implements Updateable {
     private long cooldown = 1500; // 1.5 seconds, how fast the user can shoot before cooldown/reload
     private long LastFired = 0;
 
+    private HealthBar healthBar;
+
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         super(x, y, img);
         this.tankID = new Random().nextInt(300);
@@ -47,6 +49,7 @@ public class Tank extends GameObject implements Updateable {
         this.vy = vy;
         this.img = img;
         this.angle = angle;
+        this.healthBar = new HealthBar(this, 100, 100, 10);
     }
 
     void setX(float x){ this.x = x; }
@@ -215,9 +218,11 @@ public class Tank extends GameObject implements Updateable {
 
     @Override
     public void handleCollision(GameObject by) {
-        if(by instanceof Bullet) {
-            this.health -= 1; // aprox 15 hp per hit? frame wise
-            System.out.println(health);
+        if(by instanceof Bullet) { // verifies bullets from self does not inflict damage
+            if(((Bullet) by).getOwner() != this.tankID) {
+                this.health -= 1; // aprox 15 hp per hit? frame wise
+                System.out.println(health);
+            }
         }else if (by instanceof Wall || by instanceof BWall) {
             this.x -= this.vx;
             this.y -= this.vy;
@@ -238,6 +243,18 @@ public class Tank extends GameObject implements Updateable {
 
     public void setSpeed(float speed) {
         this.R = speed;
+    }
+
+    public HealthBar getHealthBar() {
+        return healthBar;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 
 //    public List<Bullet> getAmmo() { //TODO

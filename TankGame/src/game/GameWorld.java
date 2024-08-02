@@ -255,8 +255,17 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D buffer = world.createGraphics();
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
+        t1.getHealthBar().draw(g2, 300, 300);
+        t2.getHealthBar().draw(g2, 300, 305);
+        t1.getHealthBar().draw(g2, (int)t1.getX(), (int)t1.getY() - 20);
+        t2.getHealthBar().draw(g2, (int)t2.getX(), (int)t2.getY() - 20);
+
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
+
+         // Adjusted position
+
+
 
         for(int i = 0; i < this.anims.size(); i++){
             this.anims.get(i).render(buffer);
