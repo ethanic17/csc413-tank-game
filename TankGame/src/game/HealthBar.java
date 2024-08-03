@@ -23,10 +23,29 @@ public class HealthBar {
         g.setColor(Color.GRAY);
         g.fillRect(x, y, width, height);
 
-        g.setColor(Color.RED);
-        g.fillRect(x, y, healthWidth, height);
-
         g.setColor(Color.BLACK);
         g.drawRect(x, y, width, height);
+
+//        g.setColor(Color.RED);
+//        g.fillRect(x, y, healthWidth, height);
+
+        if(currentHealth > 101) {
+            g.setColor(Color.BLUE);
+            g.fillRect(x, y, healthWidth, height);
+        } else if (currentHealth >= 80) {
+            g.setColor(Color.GREEN);
+            g.fillRect(x, y, healthWidth, height);
+        } else if (currentHealth >= 30) {
+            g.setColor(Color.YELLOW);
+            g.fillRect(x, y, healthWidth, height);
+        } else if (currentHealth < 29) {
+            g.setColor(Color.RED);
+            g.fillRect(x, y, healthWidth, height);
+        } else if (currentHealth <= 0) {
+            g.setColor(Color.BLACK);
+            g.drawRect(x, y, width, height);
+        }
+
+
     }
 }

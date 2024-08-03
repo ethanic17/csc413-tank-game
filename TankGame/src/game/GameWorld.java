@@ -76,7 +76,18 @@ public class GameWorld extends JPanel implements Runnable {
                 this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.repaint();   // redraw game
-                this.winCondition();
+
+                // win condition  check
+                if (t1.getHealth() <= 0) {
+                    System.out.println("Player 2 wins!");
+                    lf.setFrame("end");
+                    break;
+                } else if (t2.getHealth() <= 0) {
+                    System.out.println("Player 1 wins!");
+                    lf.setFrame("end");
+                    break;
+                }
+
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
                  * loop run at a fixed rate per/sec. 
@@ -115,26 +126,10 @@ public class GameWorld extends JPanel implements Runnable {
     /**
      * Reset game to its initial state.
      */
-//    public void resetGame() { //TODO fix rest game method
-//        this.tick = 0;
-//        this.t1.setX(300);
-//        this.t1.setY(300);
-//
-//        this.t2.setX(400);
-//        this.t2.setY(400);
-//
-//        this.t1.setHealth(100);
-//        this.t2.setHealth(100);
-//    }
-
     public void resetGame() {
-        // Clear existing game objects
         this.gObjs.clear();
-
-        // Reset tick counter
         this.tick = 0;
 
-        // Reinitialize tanks
         this.t1.setX(300);
         this.t1.setY(300);
         this.t1.setHealth(100);
@@ -145,7 +140,6 @@ public class GameWorld extends JPanel implements Runnable {
         this.t2.setHealth(100);
         this.t2.setSpeed(5);
 
-        // Reload game objects from CSV file
         int row = 0;
         InputStreamReader isr = new InputStreamReader(
                 Objects.requireNonNull(
@@ -168,7 +162,6 @@ public class GameWorld extends JPanel implements Runnable {
             throw new RuntimeException(e);
         }
 
-        // Add tanks back to game objects
         this.gObjs.add(t1);
         this.gObjs.add(t2);
     }
@@ -259,18 +252,6 @@ public class GameWorld extends JPanel implements Runnable {
 
         t1.getHealthBar().draw(onScreenPanel, (int)t1.getX(), (int)t1.getY() - 10);
         t2.getHealthBar().draw(onScreenPanel, (int)t2.getX(), (int)t2.getY() - 10);
-    }
-
-    private void winCondition() {
-        if (t1.getHealth() == 0) {
-            System.out.println("Player 2 wins!");
-            lf.setFrame("end");
-//            System.exit(0);
-        } else if (t2.getHealth() == 0) {
-            System.out.println("Player 1 wins!");
-            lf.setFrame("end");
-//            System.exit(0);
-        }
     }
 
     @Override
