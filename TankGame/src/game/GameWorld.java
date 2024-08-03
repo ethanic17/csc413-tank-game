@@ -50,7 +50,7 @@ public class GameWorld extends JPanel implements Runnable {
 
     @Override
     public void run() {
-//        this.resetGame();
+        this.resetGame();
         Sound bg = ResourceManager.getSound("bg"); // plays baxkground music
         bg.loopContinuously();
         bg.play();
@@ -115,13 +115,62 @@ public class GameWorld extends JPanel implements Runnable {
     /**
      * Reset game to its initial state.
      */
-    public void resetGame() { //TODO fix rest game method
+//    public void resetGame() { //TODO fix rest game method
+//        this.tick = 0;
+//        this.t1.setX(300);
+//        this.t1.setY(300);
+//
+//        this.t2.setX(400);
+//        this.t2.setY(400);
+//
+//        this.t1.setHealth(100);
+//        this.t2.setHealth(100);
+//    }
+
+    public void resetGame() {
+        // Clear existing game objects
+        this.gObjs.clear();
+
+        // Reset tick counter
         this.tick = 0;
+
+        // Reinitialize tanks
         this.t1.setX(300);
         this.t1.setY(300);
+        this.t1.setHealth(100);
+        this.t1.setSpeed(5);
 
-        this.t2.setX(400);
-        this.t2.setY(400);
+        this.t2.setX(1500);
+        this.t2.setY(300);
+        this.t2.setHealth(100);
+        this.t2.setSpeed(5);
+
+        // Reload game objects from CSV file
+        int row = 0;
+        InputStreamReader isr = new InputStreamReader(
+                Objects.requireNonNull(
+                        ResourceManager.class.getClassLoader().getResourceAsStream("world.csv")
+                )
+        );
+
+        try (BufferedReader mapReader = new BufferedReader(isr)) {
+            while(mapReader.ready()) {
+                String line = mapReader.readLine();
+                String[] objs = line.split(",");
+                for (int col = 0; col < objs.length; col++) {
+                    String gameItem = objs[col];
+                    if("0".equals(gameItem)) continue;
+                    this.gObjs.add(GameObject.newInstance(gameItem, col*32, row*32));
+                }
+                row++;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Add tanks back to game objects
+        this.gObjs.add(t1);
+        this.gObjs.add(t2);
     }
 
     /**
@@ -201,38 +250,27 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     private void displayHealthBar(Graphics2D onScreenPanel) {
-        BufferedImage lh  = null;
-        onScreenPanel.drawImage(lh, 0, 0, null);
+//        BufferedImage lh  = null;
+//        onScreenPanel.drawImage(lh, 0, 0, null);
+//        onScreenPanel.setColor(Color.RED);
+//
+//        BufferedImage rh = null;
+//        onScreenPanel.drawImage(rh, 0, 0, null);
 
-        BufferedImage rh = null;
-        onScreenPanel.drawImage(rh, 0, 0, null);
+        t1.getHealthBar().draw(onScreenPanel, (int)t1.getX(), (int)t1.getY() - 10);
+        t2.getHealthBar().draw(onScreenPanel, (int)t2.getX(), (int)t2.getY() - 10);
     }
 
     private void winCondition() {
         if (t1.getHealth() == 0) {
             System.out.println("Player 2 wins!");
-            System.exit(0);
+            lf.setFrame("end");
+//            System.exit(0);
         } else if (t2.getHealth() == 0) {
             System.out.println("Player 1 wins!");
-            System.exit(0);
+            lf.setFrame("end");
+//            System.exit(0);
         }
-    }
-
-//    private void displayHealthBar() {
-//        Rectangle healthBar1 = new Rectangle(200.0, 50.0, Color.RED);
-//        Rectangle healthBar2 = new Rectangle(200.0, 50.0, Color.BLUE);
-//
-//
-//    }
-
-    private void calculateHealth(int health) {
-
-//        if (this.t1.getHealth() == 100) {
-//
-//        }
-
-        float bar = (health / maxHealth);
-//        float width = (bar * maxWidth);
     }
 
     @Override
@@ -242,15 +280,10 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D buffer = world.createGraphics();
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
 
-        t1.getHealthBar().draw(g2, 300, 300);
-        t2.getHealthBar().draw(g2, 300, 305);
-        t1.getHealthBar().draw(g2, (int)t1.getX(), (int)t1.getY() - 20);
-        t2.getHealthBar().draw(g2, (int)t2.getX(), (int)t2.getY() - 20);
+
 
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
-
-         // Adjusted position
 
 
 
@@ -260,20 +293,15 @@ public class GameWorld extends JPanel implements Runnable {
 
         // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
         this.displaySplitScreen(g2);
+        this.displayHealthBar(g2);
         this.displayMiniMap(g2);
+
 
 
     }
 
     public void addGameObject(GameObject g) {
         this.gObjs.add(g);
-    }
-
-    public static GameWorld getInstance() {
-        if(instance == null) {
-            instance = new GameWorld(null);
-        }
-        return instance;
     }
 
 

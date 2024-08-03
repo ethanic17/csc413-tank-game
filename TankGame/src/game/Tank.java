@@ -130,8 +130,7 @@ public class Tank extends GameObject implements Updateable {
         if (this.ShootPressed && currentTime > this.LastFired + this.cooldown) { // adds a cooldown for shooting bullets
             this.LastFired = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
-            p.initObject(safeShootX(), safeShootY(), angle); //TODO
-//            this.ammo.add((Bullet)p);
+            p.initObject(safeShootX(), safeShootY(), angle);
             Bullet b = (Bullet)p;
             b.setOwner(this.tankID); // every bullet has a tank owner and ID
             gw.addGameObject(b);
@@ -156,7 +155,6 @@ public class Tank extends GameObject implements Updateable {
         x -= vx;
         y -= vy;
        checkBorder();
-       checkWall();
     }
 
     private void moveForwards() {
@@ -165,7 +163,6 @@ public class Tank extends GameObject implements Updateable {
         x += vx;
         y += vy;
         checkBorder();
-        checkWall();
     }
 
     private void centerScreen(){ // preventing rasteriazation error/tank going off to nowhere
@@ -196,18 +193,10 @@ public class Tank extends GameObject implements Updateable {
         }
     }
 
-
-
-    // checks if wall is in direction
-    private void checkWall() {
-
-    }
-
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
-
 
     public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
@@ -244,6 +233,10 @@ public class Tank extends GameObject implements Updateable {
         return this.health;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public void setSpeed(float speed) {
         this.R = speed;
     }
@@ -260,7 +253,7 @@ public class Tank extends GameObject implements Updateable {
         return y;
     }
 
-//    public List<Bullet> getAmmo() { //TODO
+//    public List<Bullet> getAmmo() {
 //        return this.ammo;
 //    }
 }

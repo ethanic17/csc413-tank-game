@@ -24,7 +24,7 @@ public abstract class GameObject {
      */
 
     public static GameObject newInstance(String type, float x, float y) {
-        return switch(type) { //switch expressions
+        return switch(type) {
             case "3", "9" -> new Wall(x, y, ResourceManager.getSprite("wall"));
             case "2" -> new BWall(x, y, ResourceManager.getSprite("bwall"));
             case "4" -> new SpeedPowerup(x, y, ResourceManager.getSprite("speed"));
