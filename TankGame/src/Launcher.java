@@ -106,4 +106,8 @@ public class Launcher {
                         .fillPool(500)); //creates bullet pool
         (new Launcher()).initUIComponents();
     }
+
+    public int getWinner(){
+        return this.gamePanel.getWinner();
+    }
 }

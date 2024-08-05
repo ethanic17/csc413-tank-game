@@ -209,6 +209,7 @@ public class Tank extends GameObject implements Updateable {
 
     @Override
     public void handleCollision(GameObject by) {
+        Sound powerup = ResourceManager.getSound("pickup"); //TODO volume too low
         if(by instanceof Bullet) { // verifies bullets from self does not inflict damage
             if(((Bullet) by).getOwner() != this.tankID) {
                 this.health -= 1; // approx 15 hp per hit? frame wise
@@ -221,14 +222,20 @@ public class Tank extends GameObject implements Updateable {
             this.vx = 0;
             this.vy = 0;
         } else if (by instanceof HealthPowerup) {
+            powerup.setVolume(1f);
+            powerup.play();
             this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
             this.health += 20;
             by.setHasCollided(); // removes health powerup from map
         } else if (by instanceof SpeedPowerup) {
+            powerup.setVolume(1f);
+            powerup.play();
             this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
             setSpeed(10);
             by.setHasCollided();
         } else if (by instanceof ShieldPowerup) { // shield resets your health to 125, useful for low health situations
+            powerup.setVolume(1f);
+            powerup.play();
             this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
             this.health = 125;
             by.setHasCollided();

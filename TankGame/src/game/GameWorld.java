@@ -31,6 +31,7 @@ public class GameWorld extends JPanel implements Runnable {
     private BufferedImage wall, bwall, health, shield, speed, bullet;
     private BufferedImage bulletImage;
     private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
+    private int winner = 0; // for win condition for endgame panel
 
     private int maxHealth = 100;
     private static GameWorld instance;
@@ -71,13 +72,17 @@ public class GameWorld extends JPanel implements Runnable {
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.repaint();   // redraw game
 
+
+
                 // win condition  check
                 if (t1.getHealth() <= 0) {
                     System.out.println("Player 2 wins!");
+                    winner = 2;
                     lf.setFrame("end");
                     break;
                 } else if (t2.getHealth() <= 0) {
                     System.out.println("Player 1 wins!");
+                    winner = 1;
                     lf.setFrame("end");
                     break;
                 }
@@ -248,6 +253,10 @@ public class GameWorld extends JPanel implements Runnable {
 
     public void addGameObject(GameObject g) {
         this.gObjs.add(g);
+    }
+
+    public int getWinner() {
+        return winner;
     }
 
 
