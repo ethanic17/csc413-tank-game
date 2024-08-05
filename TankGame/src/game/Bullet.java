@@ -6,6 +6,8 @@ import TankGame.src.GameConstants;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bullet extends GameObject implements Poolable, Updateable {
     private float x;
@@ -16,6 +18,7 @@ public class Bullet extends GameObject implements Poolable, Updateable {
     private float angle;
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
+
 
     public Bullet(BufferedImage img) {
         super( 0, 0, img);
@@ -109,8 +112,12 @@ public class Bullet extends GameObject implements Poolable, Updateable {
             this.vy = 0;
         } else if(by instanceof BWall) {
             by.setHasCollided();
+        } else if (by instanceof Tank) {
+
         }
     }
+
+
 
 
 

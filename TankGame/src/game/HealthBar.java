@@ -29,8 +29,11 @@ public class HealthBar {
 //        g.setColor(Color.RED);
 //        g.fillRect(x, y, healthWidth, height);
 
-        if(currentHealth > 101) {
-            g.setColor(Color.BLUE);
+        if(currentHealth == 125) { // shield power up
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(x, y, healthWidth, height);
+        } else if(currentHealth >= 101) { // health power up
+            g.setColor(Color.CYAN);
             g.fillRect(x, y, healthWidth, height);
         } else if (currentHealth >= 80) {
             g.setColor(Color.GREEN);

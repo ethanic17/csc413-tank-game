@@ -4,6 +4,8 @@ import TankGame.src.GameConstants;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,22 +22,17 @@ public class Tank extends GameObject implements Updateable {
     private float angle;
 
     private int health = 100;
-
+    static List<Animation> anims = new ArrayList<>();
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
-
     private BufferedImage img;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean ShootPressed;
-
-  //  Bullet b;
-//    List<Bullet> ammo = new ArrayList<Bullet>(); // store list here or in gameworld? Easier for collisions here, Tank owns the bullets
     private long cooldown = 1500; // 1.5 seconds, how fast the user can shoot before cooldown/reload
     private long LastFired = 0;
-
     private HealthBar healthBar;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -134,7 +131,12 @@ public class Tank extends GameObject implements Updateable {
             Bullet b = (Bullet)p;
             b.setOwner(this.tankID); // every bullet has a tank owner and ID
             gw.addGameObject(b);
-            ResourceManager.getSound("shooting").play(); //TODO check sound
+
+            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("bulletshoot")));
+            Sound shoot = ResourceManager.getSound("shooting"); //TODO volume too low
+            shoot.setVolume(1f);
+            shoot.play();
+
         }
         centerScreen();
         this.hitbox.setLocation((int)x, (int)y);
@@ -210,7 +212,8 @@ public class Tank extends GameObject implements Updateable {
         if(by instanceof Bullet) { // verifies bullets from self does not inflict damage
             if(((Bullet) by).getOwner() != this.tankID) {
                 this.health -= 1; // approx 15 hp per hit? frame wise
-                System.out.println(health);
+//                System.out.println(health);
+                this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("rockethit")));
             }
         }else if (by instanceof Wall || by instanceof BWall) { // resets tank position if collides with wall
             this.x -= this.vx;
@@ -218,14 +221,17 @@ public class Tank extends GameObject implements Updateable {
             this.vx = 0;
             this.vy = 0;
         } else if (by instanceof HealthPowerup) {
+            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
             this.health += 20;
             by.setHasCollided(); // removes health powerup from map
-            System.out.println(health);
         } else if (by instanceof SpeedPowerup) {
+            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
             setSpeed(10);
             by.setHasCollided();
-        } else if (by instanceof ShieldPowerup) {
-            // gain shield
+        } else if (by instanceof ShieldPowerup) { // shield resets your health to 125, useful for low health situations
+            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("powerpick")));
+            this.health = 125;
+            by.setHasCollided();
         }
     }
 
@@ -252,8 +258,11 @@ public class Tank extends GameObject implements Updateable {
     public float getY() {
         return y;
     }
+    public static List<Animation> getAnim() { // for GameWorld to access and render animations
+        return anims;
+    }
 
-//    public List<Bullet> getAmmo() {
-//        return this.ammo;
-//    }
+    // MORE ANIMATIONS
+    //            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("puffsmoke")));
+   //            this.anims.add(new Animation(this.x, this.y, ResourceManager.getAnim("bullethit")));
 }

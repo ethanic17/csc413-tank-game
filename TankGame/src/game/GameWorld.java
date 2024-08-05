@@ -31,10 +31,10 @@ public class GameWorld extends JPanel implements Runnable {
     private BufferedImage wall, bwall, health, shield, speed, bullet;
     private BufferedImage bulletImage;
     private ArrayList<GameObject> gObjs = new ArrayList<>(); // game objects
-    List<Animation> anims = new ArrayList<>();
 
     private int maxHealth = 100;
     private static GameWorld instance;
+    static double scaleFactor = .20; // for minimap to be bigger or smaller (scaling on diff resolutions)
 
     /**
      *
@@ -55,24 +55,18 @@ public class GameWorld extends JPanel implements Runnable {
         bg.loopContinuously();
         bg.play();
         try {
-            this.anims.add(new Animation(100, 100, ResourceManager.getAnim("puffsmoke")));
-            this.anims.add(new Animation(200, 200, ResourceManager.getAnim("rocketflame")));
-            this.anims.add(new Animation(300, 300, ResourceManager.getAnim("rockethit")));
-            this.anims.add(new Animation(400, 400, ResourceManager.getAnim("bullethit")));
-            this.anims.add(new Animation(500, 500, ResourceManager.getAnim("bulletshoot")));
-            this.anims.add(new Animation(600, 600, ResourceManager.getAnim("powerpick")));
             while (true) {
                 this.tick++; // performance dependant
-//                this.t1.update(this); // update tank 1
-//                this.t2.update(this); //updates tank 2
                 for (int i = this.gObjs.size()-1; i >= 0; i--) {
                     if(this.gObjs.get(i) instanceof Updateable u) {
                         u.update(this);
                     }
                 }
-                for(int i = 0; i < this.anims.size(); i++){
-                    this.anims.get(i).update();
+
+                for(int i = 0; i < Tank.getAnim().size(); i++){ // updates tank animations
+                    Tank.getAnim().get(i).update();
                 }
+
                 this.checkCollisions();
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.repaint();   // redraw game
@@ -111,7 +105,6 @@ public class GameWorld extends JPanel implements Runnable {
 //                        System.out.println("Collision Detected");
                     }
                 }
-
                 if(obj1 instanceof Bullet) { // to stop bullets from going past walls
                     GameObject obj2 = this.gObjs.get(j);
                     if(obj1.getHitbox().intersects(obj2.getHitbox())) {
@@ -208,21 +201,8 @@ public class GameWorld extends JPanel implements Runnable {
 
         this.gObjs.add(t1);
         this.gObjs.add(t2);
-        //TODO add tank1 and  2 to game objects
-
         background = ResourceManager.getSprite("background");
     }
-
-    private void renderFloor(Graphics buffer){
-        BufferedImage floor = ResourceManager.getSprite("floor");
-        for (int i = 0; i < GameConstants.GAME_SCREEN_WIDTH; i += floor.getWidth()) {
-            for (int j = 0; j < GameConstants.GAME_SCREEN_HEIGHT; j += floor.getHeight()) {
-                buffer.drawImage(floor, i, j, null);
-            }
-        }
-    }
-
-    static double scaleFactor = .25; // for minimap to be bigger or smaller (scaling on diff resolutions)
 
     private void displayMiniMap(Graphics2D onScreenPanel) { // creating minimap from BufferedImage floor/world
         BufferedImage mm = this.world.getSubimage(0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT);
@@ -243,15 +223,8 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     private void displayHealthBar(Graphics2D onScreenPanel) {
-//        BufferedImage lh  = null;
-//        onScreenPanel.drawImage(lh, 0, 0, null);
-//        onScreenPanel.setColor(Color.RED);
-//
-//        BufferedImage rh = null;
-//        onScreenPanel.drawImage(rh, 0, 0, null);
-
-        t1.getHealthBar().draw(onScreenPanel, (int)t1.getX(), (int)t1.getY() - 10);
-        t2.getHealthBar().draw(onScreenPanel, (int)t2.getX(), (int)t2.getY() - 10);
+        t1.getHealthBar().draw(onScreenPanel, (int)t1.getX(), (int)t1.getY() - 5);
+        t2.getHealthBar().draw(onScreenPanel, (int)t2.getX(), (int)t2.getY() - 5);
     }
 
     @Override
@@ -260,30 +233,23 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
         buffer.drawImage(background, 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, this);
-
-
-
         // renders game objects from csv
         this.gObjs.forEach(go -> go.drawImage(buffer)); // draws game objets from gObjs list to buffer
 
-
-
-        for(int i = 0; i < this.anims.size(); i++){
-            this.anims.get(i).render(buffer);
+        for(int i = 0; i < Tank.getAnim().size(); i++){ // renders animations inside Tank anims
+            Tank.getAnim().get(i).render(buffer);
         }
 
         // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
         this.displaySplitScreen(g2);
         this.displayHealthBar(g2);
         this.displayMiniMap(g2);
-
-
-
     }
 
     public void addGameObject(GameObject g) {
         this.gObjs.add(g);
     }
+
 
 
 
