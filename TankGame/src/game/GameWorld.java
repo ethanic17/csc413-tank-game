@@ -47,7 +47,9 @@ public class GameWorld extends JPanel implements Runnable {
             e.printStackTrace();
         }
         this.lf = lf;
+
     }
+
 
     @Override
     public void run() {
@@ -73,33 +75,34 @@ public class GameWorld extends JPanel implements Runnable {
                 this.repaint();   // redraw game
 
 
-
                 // win condition  check
-                if (t1.getHealth() <= 0) {
+//                if (t1.getHealth() <= 0) {
+//                    System.out.println("Player 2 wins!");
+//                    winner = 2;
+//                    this.lf.updateEndGamePanel();
+//                    lf.setFrame("end");
+//                    break;
+//                } else if (t2.getHealth() <= 0) {
+//                    System.out.println("Player 1 wins!");
+//                    winner = 1;
+//                    this.lf.updateEndGamePanel();
+//                    lf.setFrame("end");
+//                    break;
+//                }
+
+                if (t1.getHealthBar().getCounter() == 3) {
                     System.out.println("Player 2 wins!");
                     winner = 2;
                     this.lf.updateEndGamePanel();
                     lf.setFrame("end");
                     break;
-                } else if (t2.getHealth() <= 0) {
+                } else if (t2.getHealthBar().getCounter() == 3) {
                     System.out.println("Player 1 wins!");
                     winner = 1;
                     this.lf.updateEndGamePanel();
                     lf.setFrame("end");
                     break;
                 }
-
-//                if (t1.getHealthBar().getCounter() == 3) {
-//                    System.out.println("Player 2 wins!");
-//                    winner = 2;
-//                    lf.setFrame("end");
-//                    break;
-//                } else if (t2.getHealthBar().getCounter() == 3) {
-//                    System.out.println("Player 1 wins!");
-//                    winner = 1;
-//                    lf.setFrame("end");
-//                    break;
-//                }
 
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
@@ -246,6 +249,11 @@ public class GameWorld extends JPanel implements Runnable {
         t2.getHealthBar().draw(onScreenPanel, (int)t2.getX(), (int)t2.getY() - 5);
     }
 
+    private void displayLiveCount(Graphics2D onScreenPanel) {
+        int live1 = t1.getHealthBar().getCounter();
+        int live2 = t2.getHealthBar().getCounter();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // for bg image, load badkground before tanks
@@ -258,6 +266,7 @@ public class GameWorld extends JPanel implements Runnable {
         for(int i = 0; i < Tank.getAnim().size(); i++){ // renders animations inside Tank anims
             Tank.getAnim().get(i).render(buffer);
         }
+
 
         // FYI: being drawn to JPanel meaning Split Screen MUST be before Minimap otherwise minimap is hidden below splitscreen stack
         this.displaySplitScreen(g2);

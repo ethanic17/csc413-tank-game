@@ -31,13 +31,18 @@ public class HealthBar {
         g.setColor(Color.BLACK);
         g.drawRect(x, y, width, height);
 
-//        g.setColor(Color.RED);
-//        g.fillRect(x, y, healthWidth, height);
-
-        if(currentHealth == 125) { // shield power up
+        if (currentHealth <= 0) {
+            if (counter != 3) { // lives in game checak
+                counter++;
+                System.out.println("lives left: "+ counter);
+                tank.resetHealth();
+            } else {
+                // switches to endGame panel from getCounter in gamewotld
+            }
+        } else if (currentHealth == 125) { // shield power up; resets health t0 125
             g.setColor(Color.LIGHT_GRAY);
             g.fillRect(x, y, healthWidth, height);
-        } else if(currentHealth >= 101) { // health power up
+        } else if (currentHealth >= 101) { // health power up, adds health past 100
             g.setColor(Color.CYAN);
             g.fillRect(x, y, healthWidth, height);
         } else if (currentHealth >= 80) {
@@ -49,14 +54,6 @@ public class HealthBar {
         } else if (currentHealth < 29) {
             g.setColor(Color.RED);
             g.fillRect(x, y, healthWidth, height);
-        }  else if (currentHealth <= 0) {
-            if (counter != 3) {
-                counter++;
-                tank.setHealth(100);
-            } else {
-                // switches to endGame panel from getCounter in gamewotld
-            }
-
         }
 
 

@@ -250,6 +250,10 @@ public class Tank extends GameObject implements Updateable {
         this.health = health;
     }
 
+    public void resetHealth() {
+        this.health = 100;
+    }
+
     public void setSpeed(float speed) {
         this.R = speed;
     }
