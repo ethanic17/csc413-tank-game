@@ -110,6 +110,7 @@ public class Bullet extends GameObject implements Poolable, Updateable {
             this.y -= this.vy;
             this.vx = 0;
             this.vy = 0;
+
         } else if(by instanceof BWall) {
             by.setHasCollided();
         } else if (by instanceof Tank) {

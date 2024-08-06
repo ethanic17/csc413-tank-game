@@ -37,6 +37,8 @@ public class Launcher {
      */
     private CardLayout cl;
 
+    int test;
+
     public Launcher(){
         this.jf = new JFrame();             // creating a new JFrame object
         this.jf.setTitle("Tank Wars Game"); // setting the title of the JFrame window.
@@ -107,7 +109,12 @@ public class Launcher {
         (new Launcher()).initUIComponents();
     }
 
-    public int getWinner(){
+    public int getWinner(){ // gets winner for endgamepanel call
         return this.gamePanel.getWinner();
+    }
+
+    public void updateEndGamePanel() { // updates endgamepanel so winner isnt null
+        EndGamePanel endPanel = (EndGamePanel) this.mainPanel.getComponent(2);
+        endPanel.updateWinner(this.getWinner());
     }
 }

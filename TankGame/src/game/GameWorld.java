@@ -78,14 +78,28 @@ public class GameWorld extends JPanel implements Runnable {
                 if (t1.getHealth() <= 0) {
                     System.out.println("Player 2 wins!");
                     winner = 2;
+                    this.lf.updateEndGamePanel();
                     lf.setFrame("end");
                     break;
                 } else if (t2.getHealth() <= 0) {
                     System.out.println("Player 1 wins!");
                     winner = 1;
+                    this.lf.updateEndGamePanel();
                     lf.setFrame("end");
                     break;
                 }
+
+//                if (t1.getHealthBar().getCounter() == 3) {
+//                    System.out.println("Player 2 wins!");
+//                    winner = 2;
+//                    lf.setFrame("end");
+//                    break;
+//                } else if (t2.getHealthBar().getCounter() == 3) {
+//                    System.out.println("Player 1 wins!");
+//                    winner = 1;
+//                    lf.setFrame("end");
+//                    break;
+//                }
 
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
@@ -255,9 +269,11 @@ public class GameWorld extends JPanel implements Runnable {
         this.gObjs.add(g);
     }
 
+
     public int getWinner() {
         return winner;
     }
+
 
 
 

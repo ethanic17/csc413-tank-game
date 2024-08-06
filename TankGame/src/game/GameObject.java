@@ -8,6 +8,7 @@ public abstract class GameObject {
     protected BufferedImage img;
     protected Rectangle hitbox;
     protected boolean hasCollided = false;
+    protected boolean wallCollision = false;
 
     public GameObject(float x, float y, BufferedImage img) {
         this.x = x;

@@ -7,12 +7,17 @@ public class HealthBar {
     private int maxHealth;
     private int width;
     private int height;
+    private int counter = 0;
 
     public HealthBar(Tank tank, int maxHealth, int width, int height) {
         this.tank = tank;
         this.maxHealth = maxHealth;
         this.width = width;
         this.height = height;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
     public void draw(Graphics2D g, int x, int y) {
@@ -44,9 +49,14 @@ public class HealthBar {
         } else if (currentHealth < 29) {
             g.setColor(Color.RED);
             g.fillRect(x, y, healthWidth, height);
-        } else if (currentHealth <= 0) {
-            g.setColor(Color.BLACK);
-            g.drawRect(x, y, width, height);
+        }  else if (currentHealth <= 0) {
+            if (counter != 3) {
+                counter++;
+                tank.setHealth(100);
+            } else {
+                // switches to endGame panel from getCounter in gamewotld
+            }
+
         }
 
 
