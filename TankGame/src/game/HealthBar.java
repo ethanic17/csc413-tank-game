@@ -20,6 +20,10 @@ public class HealthBar {
         return counter;
     }
 
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
     public void draw(Graphics2D g, int x, int y) {
         int currentHealth = tank.getHealth();
         float healthPercent = (float) currentHealth / maxHealth;

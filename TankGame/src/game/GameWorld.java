@@ -74,22 +74,6 @@ public class GameWorld extends JPanel implements Runnable {
                 this.gObjs.removeIf(g -> g.getHasCollided()); // lambda expression to remove collided objects
                 this.repaint();   // redraw game
 
-
-                // win condition  check
-//                if (t1.getHealth() <= 0) {
-//                    System.out.println("Player 2 wins!");
-//                    winner = 2;
-//                    this.lf.updateEndGamePanel();
-//                    lf.setFrame("end");
-//                    break;
-//                } else if (t2.getHealth() <= 0) {
-//                    System.out.println("Player 1 wins!");
-//                    winner = 1;
-//                    this.lf.updateEndGamePanel();
-//                    lf.setFrame("end");
-//                    break;
-//                }
-
                 if (t1.getHealthBar().getCounter() == 3) {
                     System.out.println("Player 2 wins!");
                     winner = 2;
@@ -99,7 +83,7 @@ public class GameWorld extends JPanel implements Runnable {
                 } else if (t2.getHealthBar().getCounter() == 3) {
                     System.out.println("Player 1 wins!");
                     winner = 1;
-                    this.lf.updateEndGamePanel();
+                    this.lf.updateEndGamePanel(); // updates text
                     lf.setFrame("end");
                     break;
                 }
@@ -145,6 +129,10 @@ public class GameWorld extends JPanel implements Runnable {
         this.gObjs.clear();
         this.tick = 0;
 
+        t1.getHealthBar().setCounter(0);
+        t2.getHealthBar().setCounter(0);
+
+
         this.t1.setX(300);
         this.t1.setY(300);
         this.t1.setHealth(100);
@@ -154,6 +142,8 @@ public class GameWorld extends JPanel implements Runnable {
         this.t2.setY(300);
         this.t2.setHealth(100);
         this.t2.setSpeed(5);
+
+
 
         int row = 0;
         InputStreamReader isr = new InputStreamReader(

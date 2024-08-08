@@ -20,7 +20,7 @@ public class EndGamePanel extends JPanel {
         this.setBackground(Color.BLACK);
         this.setLayout(null);
 
-        JLabel whoWon = new JLabel("Game Over! Player " +  lf.getWinner() +  " Wins!");
+        JLabel whoWon = new JLabel("Game Over! Player " +  lf.getWinner() +  " Wins!"); // get winner from game panel
         whoWon.setFont(new Font("Courier New", Font.BOLD, 28));
         whoWon.setBounds(50, 260, 600, 50);
         whoWon.setForeground(Color.WHITE);
